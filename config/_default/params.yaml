@@ -6,20 +6,20 @@
 # Appearance
 
 appearance:
-  theme_day: minimal
-  theme_night: minimal
-  font: minimal
-  font_size: L
+  theme_day: coffee_custom
+  theme_night:
+  font: Native
+  font_size: m
 
 # SEO
 
 marketing:
   seo:
-    site_type: Person
+    site_type: Project
     local_business_type: ''
-    org_name: ''
-    description: 'A highly-customizable Hugo academic resume theme powered by Wowchemy website builder.'
-    twitter: 'wowchemy'
+    org_name: 'cloud-native.wiki'
+    description: 'Hugo based static site for Cloud-Native learning'
+    twitter: 'avijit_tweeter'
   analytics:
     google_analytics: ''
     baidu_tongji: ''
@@ -37,7 +37,7 @@ header:
     align: l
     show_logo: true
     show_language: false
-    show_day_night: true
+    show_day_night: false
     show_search: true
     highlight_active_link: true
 
@@ -70,7 +70,7 @@ features:
   privacy_pack:
     enable: false
   repository:
-    url: 'https://github.com/<username>/<repository>'
+    url: 'https://github.com/avijitliberty/cloud-native'
     content_dir: content
     branch: main
   avatar:
