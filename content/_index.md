@@ -105,7 +105,7 @@ sections:
         # Options include `left`, `center` (default), or `right`.
         # image_position: center
         # Use a fun parallax-like fixed background effect on desktop? true/false
-        image_parallax: true
+        parallax: true
         # Text color (true=light, false=dark, or remove for the dynamic theme color).
         # text_color_light: false
   - block: features
@@ -172,22 +172,76 @@ sections:
     # Choose how many columns the section has. Valid values: 1 or 2.
       columns: "1"
       background:
-        color: '#5C4033'
+        # color: '#5C4033'
         # Name of image in `assets/media/`.
         image: 
           filename: open-book.jpg
-        # Darken the image? Range 0-1 where 0 is transparent and 1 is opaque.
-        image_darken: 0.8
-        #  Options are `cover` (default), `contain`, or `actual` size.
-        image_size: cover
-        # Options include `left`, `center` (default), or `right`.
-        image_position: center
-        # Use a fun parallax-like fixed background effect on desktop? true/false
-        image_parallax: true
+          filters:
+          # Darken the image? Range 0-1 where 1 is transparent and 0 is opaque.
+            brightness: 1
+          # Image fit. Options are `cover` (default), `contain`, or `actual` size.
+            size: cover
+          # Image focal point. Options include `left`, `center` (default), or `right`.
+            position: center
+          # Use a fun parallax-like fixed background effect on desktop? true/false
+            parallax: true
         # Text color (true=light, false=dark, or remove for the dynamic theme color).
         text_color_light: false
     advanced:
       css_class: fullscreen
+
+  - block: portfolio
+    id: projects
+    content:
+      title: 📐Projects
+      filters:
+        folders:
+          - project
+      # Default filter index (e.g. 0 corresponds to the first `filter_button` instance below).
+      default_button_index: 0
+      # Filter toolbar (optional).
+      # Add or remove as many filters (`filter_button` instances) as you like.
+      # To show all items, set `tag` to "*".
+      # To filter by a specific tag, set `tag` to an existing tag name.
+      # To remove the toolbar, delete the entire `filter_button` block.
+      buttons:
+        - name: All
+          tag: '*'
+        - name: Spring Boot
+          tag: Spring Boot
+        - name: AWS
+          tag: AWS
+        - name: Kubernetes
+          tag: Kubernetes
+        - name: Other
+          tag: Demo
+    design:
+      # Choose how many columns the section has. Valid values: '1' or '2'.
+      columns: '2'
+      view: showcase
+      # For Showcase view, flip alternate rows?
+      flip_alt_rows: false
+      background:
+        # Background color.
+        # color: '#5C4033'
+        # Background gradient.
+        #gradient_start: "DeepSkyBlue"
+        #gradient_end: "SkyBlue"
+        # Name of image in `assets/media/`.
+        image: 
+          filename: open-book.jpg
+          filters:
+          # Darken the image? Range 0-1 where 1 is transparent and 0 is opaque.
+            brightness: 1
+          # Image fit. Options are `cover` (default), `contain`, or `actual` size.
+            size: cover
+          # Image focal point. Options include `left`, `center` (default), or `right`.
+            position: center
+          # Use a fun parallax-like fixed background effect on desktop? true/false
+            parallax: true
+        # Text color (true=light, false=dark, or remove for the dynamic theme color).
+        text_color_light: false  
+
   - block: collection
     id: posts
     content:
@@ -222,75 +276,19 @@ sections:
       # Name of image in `assets/media/`.
         image: 
           filename: open-book.jpg
-        # Darken the image? Range 0-1 where 0 is transparent and 1 is opaque.
-        image_darken: 0.8
-        #  Options are `cover` (default), `contain`, or `actual` size.
-        image_size: cover
-        # Options include `left`, `center` (default), or `right`.
-        image_position: center
-        # Use a fun parallax-like fixed background effect on desktop? true/false
-        image_parallax: true
-        # Text color (true=light, false=dark, or remove for the dynamic theme color).
-        text_color_light: false
+          filters:
+          # Darken the image? Range 0-1 where 1 is transparent and 0 is opaque.
+            brightness: 1
+          # Image fit. Options are `cover` (default), `contain`, or `actual` size.
+            size: cover
+          # Image focal point. Options include `left`, `center` (default), or `right`.
+            position: center
+          # Use a fun parallax-like fixed background effect on desktop? true/false
+            parallax: true
+          # Text color (true=light, false=dark, or remove for the dynamic theme color).
+            text_color_light: false
     advanced:
       css_class: fullscreen
-  - block: portfolio
-    id: projects
-    content:
-      title: 📐Projects
-      filters:
-        folders:
-          - project
-      # Default filter index (e.g. 0 corresponds to the first `filter_button` instance below).
-      default_button_index: 0
-      # Filter toolbar (optional).
-      # Add or remove as many filters (`filter_button` instances) as you like.
-      # To show all items, set `tag` to "*".
-      # To filter by a specific tag, set `tag` to an existing tag name.
-      # To remove the toolbar, delete the entire `filter_button` block.
-      buttons:
-        - name: All
-          tag: '*'
-        - name: Spring Boot
-          tag: Spring Boot
-        - name: AWS
-          tag: AWS
-        - name: Kubernetes
-          tag: Kubernetes
-        - name: Other
-          tag: Demo
-    design:
-      # Choose how many columns the section has. Valid values: '1' or '2'.
-      columns: '1'
-      view: showcase
-      # For Showcase view, flip alternate rows?
-      flip_alt_rows: false
-
-    design:
-      # Choose how many columns the section has. Valid values: '1' or '2'.
-      columns: '2'
-      view: showcase
-      # For Showcase view, flip alternate rows?
-      flip_alt_rows: false
-      background:
-        # Background color.
-        color: '#5C4033'
-        # Background gradient.
-        #gradient_start: "DeepSkyBlue"
-        #gradient_end: "SkyBlue"
-        # Name of image in `assets/media/`.
-        image: 
-          filename: open-book.jpg
-        # Darken the image? Range 0-1 where 0 is transparent and 1 is opaque.
-        image_darken: 1
-        #  Options are `cover` (default), `contain`, or `actual` size.
-        image_size: cover
-        # Options include `left`, `center` (default), or `right`.
-        image_position: right
-        # Use a fun parallax-like fixed background effect on desktop? true/false
-        image_parallax: true
-        # Text color (true=light, false=dark, or remove for the dynamic theme color).
-        text_color_light: false   
   - block: about.biography
     id: about
     content:
@@ -302,22 +300,23 @@ sections:
       columns: '2'
       background:
         # Background color.
-        color: '#5C4033'
+        # color: '#5C4033'
         # Background gradient.
         #gradient_start: "DeepSkyBlue"
         #gradient_end: "SkyBlue"
         # Name of image in `assets/media/`.
         image: 
           filename: biography.jpeg
-        # Darken the image? Range 0-1 where 0 is transparent and 1 is opaque.
-        image_darken: 0
-        #  Options are `cover` (default), `contain`, or `actual` size.
-        image_size: cover
-        # Options include `left`, `center` (default), or `right`.
-        image_position: center
-        # Use a fun parallax-like fixed background effect on desktop? true/false
-        image_parallax: true
-        # Text color (true=light, false=dark, or remove for the dynamic theme color).
+          filters:
+          # Darken the image? Range 0-1 where 1 is transparent and 0 is opaque.
+            brightness: 0.6
+          # Image fit. Options are `cover` (default), `contain`, or `actual` size.
+            size: cover
+          # Image focal point. Options include `left`, `center` (default), or `right`.
+            position: center
+          # Use a fun parallax-like fixed background effect on desktop? true/false
+            parallax: true
+          # Text color (true=light, false=dark, or remove for the dynamic theme color).
         text_color_light: true
   - block: experience
     content:
@@ -372,27 +371,28 @@ sections:
       view: Showcase
       background:
         # Background color.
-        color: '#5C4033'
+        # color: '#5C4033'
         # Background gradient.
         #gradient_start: "DeepSkyBlue"
         #gradient_end: "SkyBlue"
         # Name of image in `assets/media/`.
         image: 
           filename: career.jpeg
-          # Darken the image? Range 0-1 where 0 is transparent and 1 is opaque.
-        image_darken: 0.7
-        #  Options are `cover` (default), `contain`, or `actual` size.
-        image_size: cover
-        # Options include `left`, `center` (default), or `right`.
-        image_position: center
-        # Use a fun parallax-like fixed background effect on desktop? true/false
-        image_parallax: true
+          filters:
+          # Darken the image? Range 0-1 where 1 is transparent and 0 is opaque.
+            brightness: 0.6
+          # Image fit. Options are `cover` (default), `contain`, or `actual` size.
+            size: cover
+          # Image focal point. Options include `left`, `center` (default), or `right`.
+            position: center
+          # Use a fun parallax-like fixed background effect on desktop? true/false
+            parallax: true
         # Text color (true=light, false=dark, or remove for the dynamic theme color).
         text_color_light: true
   - block: accomplishments
     content:
       # Note: `&shy;` is used to add a 'soft' hyphen in a long heading.
-      title: 'Accomplish&shy;ments'
+      title: 'Certifications'
       subtitle:
       # Date format: https://wowchemy.com/docs/customization/#date-format
       date_format: Jan 2006
@@ -431,22 +431,23 @@ sections:
       view: Showcase
       background:
         # Background color.
-        color: '#5C4033'
+        # color: '#5C4033'
         # Background gradient.
         #gradient_start: "DeepSkyBlue"
         #gradient_end: "SkyBlue"
         # Name of image in `assets/media/`.
         image: 
           filename: certifications.jpeg
-          # Darken the image? Range 0-1 where 0 is transparent and 1 is opaque.
-        image_darken: 0
-          #  Options are `cover` (default), `contain`, or `actual` size.
-        image_size: cover
-          # Options include `left`, `center` (default), or `right`.
-        image_position: center
+          filters:
+          # Darken the image? Range 0-1 where 1 is transparent and 0 is opaque.
+            brightness: 0
+          # Image fit. Options are `cover` (default), `contain`, or `actual` size.
+            size: cover
+          # Image focal point. Options include `left`, `center` (default), or `right`.
+            position: center
           # Use a fun parallax-like fixed background effect on desktop? true/false
-        image_parallax: true
-          # Text color (true=light, false=dark, or remove for the dynamic theme color).
+            parallax: true
+        # Text color (true=light, false=dark, or remove for the dynamic theme color).
         text_color_light: true
   - block: contact
     id: contact
@@ -503,14 +504,15 @@ sections:
         # Name of image in `assets/media/`.
         image: 
           filename: contact.jpeg
-        # Darken the image? Range 0-1 where 0 is transparent and 1 is opaque.
-        image_darken: 0.6
-        #  Options are `cover` (default), `contain`, or `actual` size.
-        image_size: cover
-        # Options include `left`, `center` (default), or `right`.
-        image_position: center
-        # Use a fun parallax-like fixed background effect on desktop? true/false
-        image_parallax: true
+          filters:
+          # Darken the image? Range 0-1 where 1 is transparent and 0 is opaque.
+            brightness: 0.6
+          # Image fit. Options are `cover` (default), `contain`, or `actual` size.
+            size: cover
+          # Image focal point. Options include `left`, `center` (default), or `right`.
+            position: center
+          # Use a fun parallax-like fixed background effect on desktop? true/false
+            parallax: true
         # Text color (true=light, false=dark, or remove for the dynamic theme color).
         text_color_light: true
 ---
