@@ -21,7 +21,7 @@ marketing:
     description: 'Hugo based static site for Cloud-Native learning'
     twitter: 'avijit_tweeter'
   analytics:
-    google_analytics: ''
+    google_analytics: 'G-73PKQ8R5J1'
     baidu_tongji: ''
     google_tag_manager: ''
     microsoft_clarity: ''  
