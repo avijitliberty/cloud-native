@@ -26,7 +26,7 @@ marketing:
     google_tag_manager: ''
     microsoft_clarity: ''  
   verification:
-    google: ''
+    google: 'google-site-verification=C4ydo602MekWD4rbR7MSE1vp4G0gGoHVLiyvI-G5Vd8'
     baidu: ''
 
 # Site header
@@ -48,9 +48,9 @@ footer:
     notice: '© {year} Me. This work is licensed under {license}'
     license:
       enable: true
-      allow_derivatives: false
+      allow_derivatives: true
       share_alike: true
-      allow_commercial: false
+      allow_commercial: true
 
 # Localization
 
