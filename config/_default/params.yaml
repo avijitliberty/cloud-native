@@ -77,17 +77,19 @@ features:
     gravatar: false
     shape: circle
   comment:
-    provider: ''
+    provider: 'giscus'
     disqus:
       shortname: ''
       show_count: true
     commento:
       url: ''
     giscus:
-      repo: ''
-      repo_id: ''
-      category: ''
-      category_id: ''
+      repo: 'avijitliberty/cloud-native'
+      repo_id: 'R_kgDOKYv3hA'
+      category_id: 'DIC_kwDOKYv3hM4CagjD'
+      theme: light
+      language_code: en
+      mapping: pathname
   search:
     provider: wowchemy
     algolia:
