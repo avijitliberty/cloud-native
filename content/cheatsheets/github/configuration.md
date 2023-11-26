@@ -70,19 +70,19 @@ $ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
       ```
 
     * In the upper-right corner of any page, click your profile photo, then click ```Settings```
-      <img align="center" width="250" height="400" src="/images/uploads/userbar-account-settings.png">
+      {{< figure src="images/uploads/userbar-account-settings.png" width="250" height="400">}}
 
     * In the **Access** section of the sidebar, click ```SSH and GPG keys```.
-      <img align="center" width="250" height="250" src="/images/uploads/settings-sidebar-ssh-keys.png">
+      {{< figure src="images/uploads/settings-sidebar-ssh-keys.png" width="250" height="250">}}
 
     * Click ```New SSH key``` or ```Add SSH key```.
-      <img align="center" width="500" height="500" src="/images/uploads/ssh-add-ssh-key.png">
+      {{< figure src="images/uploads/ssh-add-ssh-key.png" width="500" height="500">}}
 
     * In the **Title** field, add a descriptive label for the new key.
       For example, if you're using a personal laptop, call this key "Personal Laptop".💡
 
     * Paste your key into the **Key** field.
-      <img align="center" width="500" height="500" src="/images/uploads/ssh-key-paste.png">
+      {{< figure src="images/uploads/ssh-key-paste.png" width="500" height="500">}}
 
     * Click ```Add SSH key```.
 

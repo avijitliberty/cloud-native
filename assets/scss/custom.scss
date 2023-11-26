@@ -253,3 +253,13 @@ div.alert-construction > div:first-child::before {
   background-color: #f6fbfe;
   border-color: #1976d2;
 }
+
+.alignleft {
+  max-width: 45%;
+  float: left;
+}
+
+.alignright {
+  max-width: 45%;
+  float: right;
+}

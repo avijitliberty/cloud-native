@@ -126,7 +126,7 @@ Checkout CLI references here: [Lambda-CLI]({{< ref "/cheatsheets/aws/aws-cli.md#
   ![Lambda-Polling-Events](/images/uploads/Lambda-Polling-Events.JPG)
 
    * **Streams**
-     <img align="right" width="250" height="250" src="/images/uploads/lambda-kinesis-1.PNG">
+     {{< figure src="images/uploads/lambda-kinesis-1.PNG" width="250" height="250" class="alignright">}}
 
      * Stream-based polling there is no cost to make the polling calls.
      * An event source mapping creates an iterator for each shard, processes items in order
@@ -147,7 +147,7 @@ Checkout CLI references here: [Lambda-CLI]({{< ref "/cheatsheets/aws/aws-cli.md#
 
    * **Queues**
 
-     <img align="right" width="250" height="250" src="/images/uploads/lambda-sqs.PNG">
+     {{< figure src="images/uploads/lambda-sqs.PNG" width="250" height="250" class="alignright">}}
 
      * With SQS polling, standard SQS rates apply for each request.
      * Event Source Mapping will poll SQS (Long Polling)
@@ -260,7 +260,7 @@ With Lambda, you can use the language and IDE that you are most familiar with an
 * Nov 2019: Can configure to send result to a destination
 * Asynchronous invocations - can define destinations for successful and failed event:
 
-  <img align="right" width="350" height="350" src="/images/uploads/lambda-destinations-1.PNG">
+  {{< figure src="images/uploads/lambda-destinations-1.PNG" width="350" height="350" class="alignright">}}
 
   * Amazon SQS
   * Amazon SNS
@@ -270,7 +270,7 @@ With Lambda, you can use the language and IDE that you are most familiar with an
 
 * Event Source mapping: for discarded event batches
 
-  <img align="right" width="350" height="350" src="/images/uploads/lambda-destinations-2.PNG">
+  {{< figure src="images/uploads/lambda-destinations-2.PNG" width="350" height="350" class="alignright">}}
 
   * Amazon SQS
   * Amazon SNS
@@ -307,7 +307,7 @@ With Lambda, you can use the language and IDE that you are most familiar with an
   * Invocations - Number of times a function is invoked in response to an event or invocation API call.
   * Errors - Number of invocations that failed due to errors in the function (response code 4XX).
   * Duration - Elapsed time from when the function code starts executing to when it stops executing.
-  * Throttle - Number of Lambda function invocation attempts that were throttled due to invocation rates exceeding the    customer’s concurrent limits (error code 429).
+  * Throttle - Number of Lambda function invocation attempts that were throttled due to invocation rates exceeding the customer’s concurrent limits (error code 429).
   * Iterator Age - Emitted for stream-based invocations only. Measures the age of the last record for each batch of records processed. Age is the difference between the time Lambda received the batch and the time the last record in the batch was written to the stream.
   * ConcurrentExecutions - Measures the sum of concurrent executions for a given function at a given point in time. Must be viewed as an average metric if aggregated across a time period.
   * UnreservedConcurrentExecutions - Represents the sum of the concurrency of the functions that do not have a custom concurrency limit specified. Must be viewed as an average metric if aggregated across a time period.
@@ -360,7 +360,7 @@ With Lambda, you can use the language and IDE that you are most familiar with an
     * Can use the /tmp directory to load other files at startup
     * Size of environment variables: 4 KB
 
-<img align="right" width="200" height="200" src="/images/uploads/lambda-vpc.png">
+{{< figure src="images/uploads/lambda-vpc.png" width="200" height="200" class="alignright">}}
 
 ## Lambda VPC Access
 
@@ -376,4 +376,5 @@ With Lambda, you can use the language and IDE that you are most familiar with an
 * You can use VPC endpoints to privately access AWS services without a NAT
 > Note: Lambda - CloudWatch Logs works even without endpoint or NAT Gateway
 
-<img align="center" width="350" height="350" src="/images/uploads/lambda-vpc-internet.png">
+{{< figure src="images/uploads/lambda-vpc-internet.png" width="350" height="350" >}}
+
