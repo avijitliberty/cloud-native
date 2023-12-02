@@ -95,7 +95,9 @@ $ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 
 ## Initialize a new local repository
 
-          $ git init
+  ```bash
+  $ git init
+  ```
 
   {{% callout note %}}
   It will create the hidden .git folder which is used by git to manage the repository in your working directory
@@ -105,40 +107,48 @@ $ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 
 * If you would not like to provide credentials for every "repo" operations you could cache them. The Git credential cache runs a daemon process which caches your credentials in memory and hands them out on demand.
 
-  ```
-      $ git config --global credential.helper manager
+  ```bash
+  $ git config --global credential.helper manager
   ```
 
 * Configure the author name and email address to be used with your commits:
 
-          $ git config --global user.name "LAST_NAME.FIRST_NAME"
-          $ git config --global user.email "WORK_EMAIL"
+  ```bash
+  $ git config --global user.name "LAST_NAME.FIRST_NAME"
+  $ git config --global user.email "WORK_EMAIL"
+  ```
 * Normalize your line endings:
 
-          $ git config --global core.autocrlf false
+  ```bash
+  $ git config --global core.autocrlf false
+  ```
 * Colorized output:
 
-          $ git config --global color.ui auto
+  ```bash
+  $ git config --global color.ui auto
+  ```
 * Setup KDiff as the merge tool:
 
-          $ git config --global --add merge.tool kdiff3
-          $ git config --global --add mergetool.kdiff3.path "C:/Program Files/KDiff3/kdiff3.exe"
+  ```bash
+  $ git config --global --add merge.tool kdiff3
+  $ git config --global --add mergetool.kdiff3.path "C:/Program Files/KDiff3/kdiff3.exe"
+  ```
 
 * Setup proxies to work with Git:
     * Option1: Git Proxy without Cntlm: (Not secure as our credentials are being sent "over the wire")
-      ```
-          $ git config --global http.proxy http://MyUserID:MyPassword@www-proxy.company.com:80
-          $ git config --global https.proxy http://MyUserID:MyPassword@www-proxy.company.com:80
+      ```bash
+      $ git config --global http.proxy http://MyUserID:MyPassword@www-proxy.company.com:80
+      $ git config --global https.proxy http://MyUserID:MyPassword@www-proxy.company.com:80
       ```
     * Option2: Git Proxy w/ Cntlm: (Safe since our passwords are encrypted. Generic enough to be used with a host of tools like NPM, Git, AWS, Eclipse, Docker etc.)
-      ```
-          $ git config --global http.proxy http://localhost:3128
-          $ git config --global https.proxy http://localhost:3128
+      ```bash
+      $ git config --global http.proxy http://localhost:3128
+      $ git config --global https.proxy http://localhost:3128
       ```
 * Display current settings
 
-  ```
-    $ git config --list
+  ```bash
+  $ git config --list
   ```
 
 ## Further Read
