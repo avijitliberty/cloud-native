@@ -46,7 +46,14 @@ CICD in AWS is composed of the following services. Most enterprises use most or 
     - Use an IAM Role in your AWS account and use AWS STS (AssumeRole API)
 -  By default, a user who has push permissions to a CodeCommit repository can contribute to any branch
 -  Use IAM policies to restrict users to push or merge code to a specific branch -  Example: only senior developers can push to production branch.
--  Note: ```Resource Policy``` is not supported yet.
+>  Note: ```Resource Policy``` is not supported yet.
+
+- You can monitor CodeCommit events in EventBridge (near real-time). So anytime a pullRequestCreated, pullRequestStatusChanged, referenceCreated, commentOnCommitCreated...and so on you can react to that via EventBridge like so:
+![CodeCommit Eventbridge](/images/uploads/codecommit-eventbridge.png)
+
+- You can migrate a project hosted on another Git repository (e.g., Github, GitLab...) to CodeCommit repository
+![CodeCommit Migration](/images/uploads/codecommit-migration.png)
+
 
 ![CodeCommit Vs GitHub](/images/uploads/codecommit-vs-github.png)
 
