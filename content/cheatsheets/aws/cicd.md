@@ -69,3 +69,6 @@ CICD in AWS is composed of the following services. Most enterprises use most or 
     -  Each stage can have sequential actions and/or parallel actions
     -  Example: Build èTest è Deploy è Load Testing è …
     -  Manual approval can be defined at any stage
+
+![Codepipeline – Artifacts](/images/uploads/codepipeline–artifacts.png)
+
