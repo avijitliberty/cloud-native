@@ -60,15 +60,94 @@ CICD in AWS is composed of the following services. Most enterprises use most or 
 ### CodePipeline
 
 -  Visual Workflow to orchestrate your CICD
--  Source – CodeCommit, ECR, S3, Bitbucket, GitHub
--  Build – CodeBuild, Jenkins, CloudBees, TeamCity
--  Test – CodeBuild, AWS Device Farm, 3rd party tools...
--  Deploy – CodeDeploy, Elastic Beanstalk, CloudFormation, ECS, S3...
--  Invoke – Lambda, Step Functions
+-  **Source** – CodeCommit, ECR, S3, Bitbucket, GitHub
+-  **Build** – CodeBuild, Jenkins, CloudBees, TeamCity
+-  **Test** – CodeBuild, AWS Device Farm, 3rd party tools...
+-  **Deploy** – CodeDeploy, Elastic Beanstalk, CloudFormation, ECS, S3...
+-  **Invoke** – Lambda, Step Functions
 -  Consists of stages:
     -  Each stage can have sequential actions and/or parallel actions
-    -  Example: Build èTest è Deploy è Load Testing è …
+    -  Example: Build :arrow_right: Test :arrow_right: Deploy :arrow_right: Load Testing :arrow_right: …
     -  Manual approval can be defined at any stage
 
-![Codepipeline – Artifacts](/images/uploads/codepipeline–artifacts.png)
+![Codepipeline – Artifacts](/images/uploads/codepipeline-artifacts.png)
 
+### CodeBuild
+
+* A fully managed continuous integration (CI) service
+* Continuous scaling (no servers to manage or provision – no build queue)
+* Compile source code, run tests, produce software packages...
+* Alternative to other build tools (e.g., Jenkins)
+* Charged per minute for compute resources (time it takes to complete the builds)
+* Leverages Docker under the hood for reproducible builds
+* Use prepackaged Docker images or create your own custom Docker image
+* Security:
+  * Integration with KMS for encryption of build artifacts
+  * IAM for CodeBuild permissions, and VPC for network security
+  * AWS CloudTrail for API calls logging
+
+* **Source** – CodeCommit, S3, Bitbucket, GitHub
+* **Build instructions**: Code file ```buildspec.yml``` at the project root.
+* **Output** logs can be stored in Amazon S3 & CloudWatch Logs
+* Use CloudWatch Metrics to monitor build statistics
+* Use EventBridge to detect failed builds and trigger notifications
+* Use CloudWatch Alarms to notify if you need “thresholds” for failures
+* Build Projects can be defined within CodePipeline or CodeBuild
+
+#### How it Works
+![CodeBuild – Operation](/images/uploads/codebuild-operation.png)
+
+#### buildspec.yml
+
+{{< figure src="images/uploads/buildspec.png" width="300" height="1000" class="alignright">}}
+
+* **buildspec.yml** file must be at the root of your code 
+* **env** – define environment variables 
+  * variables – plaintext variables 
+  * parameter-store – variables stored in SSM Parameter Store 
+  * secrets-manager – variables stored in AWS Secrets Manager 
+* **phases** – specify commands to run: 
+  * install – install dependencies you may need for your build 
+  * pre_build – final commands to execute before build 
+  * Build – actual build commands 
+  * post_build – finishing touches (e.g., zip output) 
+* **artifacts** – what to upload to S3 (encrypted with KMS) 
+* **cache** – files to cache (usually dependencies) to S3 for future build speedup
+
+#### Environment Variables
+
+* Default Environment Variables
+  * Defined and provided by AWS
+  * AWS_DEFAULT_REGION, CODEBUILD_BUILD_ARN, CODEBUILD_BUILD_ID, CODEBUILD_BUILD_IMAGE...
+* Custom Environment Variables
+  * Static – defined at build time (override using start-build API call)
+  * Dynamic – using SSM Parameter Store and Secrets Manager
+
+#### Inside VPC
+
+* By default, your CodeBuild containers are launched outside your VPC 
+* It cannot access resources in a VPC
+* You can specify a VPC configuration: 
+  * VPC ID 
+  * Subnet IDs 
+  * Security Group IDs 
+* Then your build can access resources in your VPC (e.g., RDS, ElastiCache, EC2, ALB...)
+* Use cases: integration tests, data query, internal load balancers..
+
+#### Validate Pull Requests
+
+* Validate proposed code changes in PRs before they get merged
+* Ensure high level of code quality and avoid code conflicts
+
+![CodeBuild – Validate Pull Requests](/images/uploads/codebuild-validate-pr.png)
+
+#### Test Reports
+
+{{< figure src="images/uploads/codebuild-test-reports.png" width="250" height="250" class="alignright">}}
+
+* Contains details about tests that are run during builds
+* Unit tests, configuration tests, functional tests
+* Create your test cases with any test framework that can create report files in the following format:
+  * JUnit XML, NUnit XML, NUnit3 XML
+  * Cucumber JSON, TestNG XML, Visual Studio TRX
+* Create a test report and add a Report Group name in ```buildspec.yml``` file with information about your tests
