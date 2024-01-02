@@ -45,7 +45,9 @@ Within a Amazon Virtual Private Cloud (Amazon VPC), you can launch AWS resources
 
 ### VPC
 
- * private network to deploy your resources (regional resource)
+ * Private network to deploy your resources (regional resource). 
+ 
+ Here's how to create a VPC that you can use for a two-tier architecture in a production environment. To improve resiliency, you deploy the servers in two Availability Zones.
 
  ![AWS-VPC](/images/uploads/vpc-network.png)
 
@@ -74,23 +76,82 @@ Subnets allow you to partition your network inside your VPC (Availability Zone r
  * NAT Gateways (AWS-managed) & NAT Instances (self-managed) allow your instances in your Private Subnets 
 to access the internet while remaining private
 
-### NACL
+### Network Access Control List (NACL)
 
-* A firewall which controls traffic from and to 
-subnet
+* A firewall which controls traffic from and to a subnet
 * Can have ALLOW and DENY rules
 * Are attached at the Subnet level
 * Rules only include IP addresses
+* Rules in the NACL are evaluated in order, starting with the lowest numbered rule. If traffic matches a rule, the rule is applied and no further rules are evaluated.
+* NACLs are stateless, ingress does not equal egress. Traffic that matches a rule for one direction will not be automatically allowed in the opposite direction. You would have to add an outbound rule.
+
+ ![NACL](/images/uploads/vpc-nacl.png)
+
+ Here's an example of a NACL Outbound rule:
+
+![NACL](/images/uploads/nacl-outbound.png)
+
+{{% callout note %}}
+
+ - Rule number 100 is denying the HTTP(80) traffic from all IPs.
+ - Rule number 110 is allowing the HTTP(80) traffic from all IPs.
+
+Rule evaluation starts from the lowest number, when there is matching rule found no futher evaluation happens. 
+For this scenario, rule 100 is matched and denies all HTTP(80) traffic in the subnet.
+
+{{% /callout %}}
 
 ### Security Groups
 
 * A firewall that controls traffic to and from an ENI / an EC2 Instance
-* Can have only ALLOW rules
+* You can specify the source, port range, and protocol for each inbound rule. 
+* You can also specify the destination, port range, and protocol for each outbound rule.
+* Can have only ALLOW rules. **Deny** is by default i.e anything not permitted is denied.
 * Rules include IP addresses and other security groups
+* All rules are evaluated to decide to allow or deny traffic. The most permissive rule is applied.
+* Security Groups are stateful, ingress equals egress. Traffic that matches a rule for one direction will also be allowed automatically in the opposite direction.
 
- ![Network ACLs vs Security Groups](/images/uploads/nacl-vs-sg.png)
+ ![Security-Groups](/images/uploads/vpc-security-groups.png)
 
-### ENI
+There are several key areas to compare between Security Groups and NACLs:
+
+ | Area                       	| AWS Security Group                                                                                     	| AWS Network ACL                                                                                                                                                      	|
+|----------------------------	|--------------------------------------------------------------------------------------------------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| Scope                      	| Operates at the instance level                                                                         	| Operates at the subnet level                                                                                                                                         	|
+| Association                	| Applies to an instance only if it is associated with the instance                                      	| Applies to all instances deployed in the associated subnet (providing an additional layer of defense if Security Group rules are too permissive)                     	|
+| Quantity Limits            	| Instance can have multiple Security groups. The initial quota is 2500 per VPC with 60 rules per group. 	| Subnet can have only one NACL. The initial quota is 200 per VPC.                                                                                                     	|
+| Destination                	| Destination can be a CIDR subnet, specific IP address, or another Security group                       	| Destination can only be a CIDR subnet,                                                                                                                               	|
+| Implicit Deny              	| Implicit Deny. You can only add “allow” rules.                                                         	| Implicit Allow. You can add “allow” rules and “deny” rules                                                                                                           	|
+| Evaluation Order and Logic 	| All rules are evaluated to decide to allow or deny traffic. The most permissive rule is applied.       	| Rules in the NACL are evaluated in order, starting with the lowest numbered rule. If traffic matches a rule, the rule is applied and no further rules are evaluated. 	|
+| Stateful vs Stateless      	| Stateful: Ingress == Egress. Response traffic is allowed by default.                                   	| Stateless: Ingress != Egress. Return traffic must be explicitly allowed by rules                                                                                     	|
+
+To visualize the stateful nature of AWS Security Groups vs the stateless nature of network ACLs here's a diagram:
+
+![SecurityGroups-vs-NACL](/images/uploads/securitygroups-vs-nacl.png)
+
+{{% callout note %}}
+
+Without any outbound rules on the network ACL, traffic is blocked outbound, but with the outbound rule added, traffic flows correctly.
+
+Whereas with the Security Group, because it is stateful, traffic is permitted outbound automatically once the inbound connection is established.
+
+{{% /callout %}}
+
+
+### Elastic Network Interface (ENI)
+
+An elastic network interface is a logical networking component in a VPC that represents a virtual network card. It can include the following attributes:
+
+ - A primary private IPv4 address from the IPv4 address range of your VPC
+ - A primary IPv6 address from the IPv6 address range of your VPC
+ - One or more secondary private IPv4 addresses from the IPv4 address range of your VPC
+ - One Elastic IP address (IPv4) per private IPv4 address
+ - One public IPv4 address
+ - One or more IPv6 addresses
+ - One or more security groups
+ - A MAC address
+ - A source/destination check flag
+ - A description
 
 ### Auto Scaling
 
