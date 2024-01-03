@@ -140,7 +140,9 @@ Whereas with the Security Group, because it is stateful, traffic is permitted ou
 
 ### Elastic Network Interface (ENI)
 
-An elastic network interface is a logical networking component in a VPC that represents a virtual network card. It can include the following attributes:
+An elastic network interface is a logical networking component in a VPC that represents a virtual network card (NIC). It can include the following attributes:
+
+{{< figure src="images/uploads/vpc-ec2-default-eni.png" width="300" height="300" class="alignright">}}
 
  - A primary private IPv4 address from the IPv4 address range of your VPC
  - A primary IPv6 address from the IPv6 address range of your VPC
@@ -153,7 +155,16 @@ An elastic network interface is a logical networking component in a VPC that rep
  - A source/destination check flag
  - A description
 
-### Auto Scaling
+ Some of the key features of an ENI to remember:
+
+ 1. Each instance in your VPC has a default network interface (the primary network interface — eth0) that assigns a private IPv4 address from the IPv4 address range of your VPC.
+ 2. You cannot detach the default (primary) network interface from an instance.
+ 3. You can create an attach an additional/ secondary ENIs to an instance in your VPC. However, these ENIs should be created within the same availability zone of the EC2 instance that you are trying to attach your secondary ENI. The number of network instances you can attach varies by instance type.
+ 4. A **Security Group** is attached to an **ENI** not an **EC2** instance. With this approach you can have multiple routes to the same EC2 instance with different security configurations.
+ 5. You can create a network interface, attach it to an instance, detach it from an instance and attach it to another instance within the same Availability Zone. 
+ 6. A network interface’s attributes follow it as it is attached or detached from an instance and reattached to another instance. You could use this approach to change the publicIP of your instance if need be.
+
+ ![Multiple-Eni](/images/uploads/vpc-ec2-multiple-eni.png)
 
 ### VPC Endpoint
 
