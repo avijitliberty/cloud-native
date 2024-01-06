@@ -9,6 +9,7 @@ tags:
 - EC2
 date: "2021-11-10T00:00:00Z"
 toc: true
+draft: true
 
 weight: 30
 
