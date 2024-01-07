@@ -78,8 +78,8 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-reso
 | • AllowedValues           | • Number                                      |
 | • ConstraintDescription   | • List\<Number\>                                |
 | • Default                 | • CommaDelimitedList                          |
-| • Description             | • AWS Specific                                |
-| • MaxLength               | • AWS::EC2::Instance::Id                    |
+| • Description             | • AWS Specific:                                |
+| • MaxLength               | &emsp;&emsp;• AWS::EC2::Instance::Id                    |
 | • MaxValue                | &emsp;&emsp;• AWS::EC2::VPC::Id                         |
 | • MinLength               | &emsp;&emsp;• List\<AWS::EC2::Subnet::Id\>                |
 | • MinValue                | &emsp;&emsp;• AWS::SSM::Parameter::Name                 |
