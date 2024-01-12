@@ -167,5 +167,5 @@ cdk destroy
 
 ## Further Read
 
-You can hear about the benefits of CDK from the horse's mouth here:
+You can hear about the benefits of CDK from the 🐎 mouth here:
 https://aws.amazon.com/cdk/
