@@ -2,7 +2,7 @@
 
 ### [Cloud-Native.Wiki](https://www.cloud-native.wiki/)
 
-![Screenshot](https://github.com/avijitliberty/cloud-native/blob/master/assets/media/wiki.jpeg)
+![Screenshot](https://github.com/avijitliberty/cloud-native/blob/main/assets/media/wiki.jpeg)
 
 Shield: [![CC BY-SA 4.0][cc-by-sa-shield]][cc-by-sa]
 
