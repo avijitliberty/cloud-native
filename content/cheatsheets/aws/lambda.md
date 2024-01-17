@@ -69,37 +69,37 @@ Run Code Serverless
 
 ### Push Events
 
-  * Synchronous vs. asynchronous event sources
+  * ```Synchronous``` vs. ```Asynchronous``` event sources
 
-  * Synchronous Event Sources
+  * **Synchronous** Event Sources
 
-    * Synchronous events expect an immediate response from the function invocation.
-    * With this execution model, there is no built-in retry in Lambda. You must manage your retry strategy within your  application code.
+    * Synchronous events expect an **immediate** response from the function invocation.
+    * With this execution model, there is no built-in **retry** in Lambda. You must manage your retry strategy within your application code.
     * To invoke Lambda synchronously via API, use **RequestResponse** invocation type.
 
-    Examples of AWS services that invoke Lambda synchronously -
+    Examples of AWS services that invoke Lambda ```synchronously``` -
 
-     * User Invoked:
+     * **User** Invoked:
        * Elastic Load Balancing (Application Load Balancer)
        * Amazon API Gateway
        * Amazon CloudFront (Lambda@Edge)
        * Amazon S3 Batch
 
-     * Service Invoked:
+     * **Service** Invoked:
        * Amazon Cognito
        * AWS Step Functions
 
-     * Other Services:
+     * **Other** Services:
        * Amazon Lex
        * Amazon Alexa
        * Amazon Kinesis Data Firehose
 
-  * Asynchronous Event Sources
+  * **Asynchronous** Event Sources
 
-    * Asynchronous events are placed in an Event Queue, and the requestor doesn't wait for the function to complete.
-    * This model makes sense for batch processes. With an async event, Lambda automatically retries the invoke twice more on your behalf. You also have the option to enable a dead-letter queue on your Lambda function.
-    * Make sure the processing is idempotent (in case of retries)
-    * In November 2019, two new error handling options were added to give you more control over failed records from asynchronous event sources: Maximum Event Age and Maximum Retry Attempts.
+    * Asynchronous events are placed in an **Event Queue**, and the requestor doesn't wait for the function to complete.
+    * This model makes sense for batch processes. With an async event, Lambda automatically **retries** the invocation **twice** more on your behalf. You also have the option to enable a ```Dead Letter Queue``` on your Lambda function.
+    * Make sure the processing is **idempotent** (in case of retries)
+    * There are two error handling options to give you more control over failed records from asynchronous event sources: ```Maximum Event Age``` and ```Maximum Retry Attempts```.
     * To invoke functions asynchronously via API, use **Event** invocation type.
 
     Examples of AWS services that invoke Lambda asynchronously -
@@ -118,10 +118,10 @@ Checkout CLI references here: [Lambda-CLI]({{< ref "/cheatsheets/aws/aws-cli.md#
 
 ### Polling Events
 
-  * Three services use the polling model: DynamoDB, Kinesis and SQS.
-  * In this model the events put information onto the stream or queue respectively.
+  * Three services use the polling model: ```DynamoDB Streams```, ```Kinesis``` and ```SQS```.
+  * In this model the events put information onto the **stream** or **queue** respectively.
   * Event Source Mapping will poll SQS queues or streams at regular intervals.
-  * Your Lambda function is invoked synchronously
+  * Your Lambda function is invoked **synchronously**
 
   ![Lambda-Polling-Events](/images/uploads/Lambda-Polling-Events.JPG)
 
@@ -129,19 +129,18 @@ Checkout CLI references here: [Lambda-CLI]({{< ref "/cheatsheets/aws/aws-cli.md#
      {{< figure src="images/uploads/lambda-kinesis-1.PNG" width="250" height="250" class="alignright">}}
 
      * Stream-based polling there is no cost to make the polling calls.
-     * An event source mapping creates an iterator for each shard, processes items in order
+     * An Event Source Mapping creates an iterator for each ```shard```, processes items in-order
      * Start with new items, from the beginning or from timestamp
-     * Processed items aren't removed from the stream (other consumers can read them)
+     * Processed items **aren't removed** from the stream (other consumers can read them)
      * Low traffic: use batch window to accumulate records before processing
      * You can process multiple batches in parallel
        * up to 10 batches per shard
-       * in-order processing is still guaranteed for each partition key,
-     * With streams, errors in a shard block further processing:
-     – A failure in this model blocks Lambda from reading any new records from the stream until the failed batch of records either expires or is processed successfully. This is important because the events in each shard from the stream need to be processed in order.
+       * in-order processing is still guaranteed for each **partition key**,
+     * With streams, errors in a shard **block** further processing:
+     – A failure in this model blocks Lambda from reading any new records from the stream until the failed batch of records either **expires** or is processed successfully. This is important because the events in each shard from the stream need to be processed in order.
      * Scaling:
-
-       * One Lambda invocation per stream shard
-       * If you use parallelization, up to 10 batches processed per shard simultaneously
+       * One Lambda invocation per stream ```shard```
+       * If you use parallelization, up to **10** batches processed per shard simultaneously
 
      ![Lambda-Kinesis](/images/uploads/lambda-kinesis-2.PNG)
 
@@ -150,21 +149,22 @@ Checkout CLI references here: [Lambda-CLI]({{< ref "/cheatsheets/aws/aws-cli.md#
      {{< figure src="images/uploads/lambda-sqs.PNG" width="250" height="250" class="alignright">}}
 
      * With SQS polling, standard SQS rates apply for each request.
-     * Event Source Mapping will poll SQS (Long Polling)
+     * Event Source Mapping will poll SQS (**Long Polling**)
      * Specify batch size (1-10 messages)
-     * Recommended: Set the queue visibility timeout to 6x the timeout of your Lambda function
-     * To use a DLQ set-up on the SQS queue, not Lambda (DLQ for Lambda is only for async invocations)
-     * Or use a Lambda destination for failures
+     * Recommended: Set the queue visibility timeout to **6x** the timeout of your Lambda function
+     * Lambda **deletes** the items from the queue after they are processed **successfully**.
+     * To use a **DLQ** set-up on the ```SQS``` queue, **not** the Lambda (**DLQ** for Lambda is only for **async** invocations)
+     * Or use a Lambda **Destination** for failures
      * With queues, errors in a batch are returned to queue
-       – Lambda will keep retrying a failed message until it is processed successfully, or the retries or retention period are exceeded. If the message fails all retries, it will either go to the DLQ if  configured, or it will be discarded. An error doesn't stop processing of the batch, but there may be a change to the order in which messages are processed.
+       - Lambda will keep retrying a failed message until it is processed successfully, or the retries or retention period are exceeded. If the message fails all retries, it will either go to the **DLQ** if  configured, or it will be **discarded**. An error **doesn't stop** processing of the batch, but there may be a change to the order in which messages are processed.
+       - Occasionally the Event Source Mapping might receive the same item from the queue **twice**, even if no function error occurred. So we need to make sure the Lambda is processing the messages in a **idempotent** fashion.
      * Scaling:
-
        * SQS Standard:
-         * Lambda adds 60 more instances per minute to scale up
-         * Up to 1000 batches of messages processed simultaneously
+         * Lambda scales up to process a ```Standard Queue``` as early as possible. It adds **60** more instances per minute to scale up.
+         * Up to **1000** batches of messages processed simultaneously
        * SQS FIFO:
-         * Messages with the same GroupID will be processed in order
-         * The Lambda function scales to the number of active message groups
+         * Messages with the **same GroupID** will be processed **in-order**
+         * The Lambda function scales to the number of active **message groups**
 
 ## Lifecycle of a Lambda function
 
@@ -182,28 +182,25 @@ Checkout CLI references here: [Lambda-CLI]({{< ref "/cheatsheets/aws/aws-cli.md#
 
 ## Lambda Concurrency and Throttling
 
-  * Concurrency limit: up to 1000 concurrent executions
+  * **Concurrency** limit: up to **1000** concurrent executions
   * Can set a **Reserved Concurrency** at the function level (=limit)
-  * Each invocation over the concurrency limit will trigger a “Throttle”
-  * Throttle behavior:
-    * If synchronous invocation => return ThrottleError - 429
-    * If asynchronous invocation => retry automatically and then go to DLQ
+  * Each invocation over the concurrency limit will trigger a ```Throttle```
+  * **Throttle** behavior:
+    * If synchronous invocation => return ThrottleError - **429**
+    * If asynchronous invocation => retry automatically and then go to **DLQ**
   * If you need a higher limit, open a support ticket
 
   * Cold Start:
 
-    * New instance => code is loaded and code outside the handler run (init)
+    * New instance => code is loaded and code **outside** the handler run (init)
     * If the init is large (code, dependencies, SDK…) this process can take some time.
     * First request served by new instances has higher latency than the rest
   * **Provisioned Concurrency**:
-    * Concurrency is allocated before the function is invoked (in advance)
+    * Concurrency is **allocated** before the function is invoked (in advance)
     * So the cold start never happens and all invocations have low latency
-    * Application Auto Scaling can manage concurrency (schedule or target utilization
+    * Application Auto Scaling can manage concurrency (schedule or target utilization)
 
     ![Lambda-Concurrency](/images/uploads/lambda-reserve-provisioned-concurrency.PNG)
-
-  > Note:
-  > Note: cold starts in VPC have been dramatically reduced in Oct & Nov 2019
 
 ## Lambda Layers
 
@@ -233,19 +230,22 @@ With Lambda, you can use the language and IDE that you are most familiar with an
      * The context object is generated by AWS, and provides metadata about the execution. You can use it to interact with Lambda. For example, it includes awsRequestld, logStreamName, and the getRemainingTimeInMillis() function.
      ![Lambda-Handler-Context](/images/uploads/Lambda-Handler-Context.JPG)
 
-*  Perform heavy-duty work outside of your function handler
+   Here's an example of Event & Context Objects using Python
+   ![Lambda-Context-Event](/images/uploads/lambda-context-event.png)
+
+*  Perform **heavy-duty** work outside of your function handler
 
    * Connect to databases outside of your function handler
    * Initialize the AWS SDK outside of your function handler
    * Pull in dependencies or datasets outside of your function handler
    ![Lambda-Authoring](/images/uploads/lambda-authoring.PNG)
 
-* Use environment variables for:
+* Use **environment** variables for:
 
    * Database Connection Strings, S3 bucket, etc… don’t put these values in your code
-   * Passwords, sensitive values… they can be encrypted using KMS
+   * Passwords, sensitive values… they should be encrypted using KMS
 
-* If your Lambda function needs disk space to perform operations, you can make use the /tmp directory (Max size is 512MB). The directory content remains when the execution context is frozen, providing transient cache that can be used for multiple invocations.(helpful to checkpoint your work). For permanent persistence of object (non temporary), use S3.
+* If your Lambda function needs disk space to perform operations, you can make use the ```/tmp``` directory (Max size is 512MB). The directory content remains when the execution context is ```frozen```, providing transient **cache** that can be used for multiple invocations.(helpful to checkpoint your work). For permanent persistence of object (non temporary), use **S3**.
 
 * Minimize your deployment package size to its runtime necessities.
 
@@ -253,12 +253,12 @@ With Lambda, you can use the language and IDE that you are most familiar with an
    * Remember the AWS Lambda limits
    * Use Layers where necessary
 
-* Avoid using recursive code, never have a Lambda function call itself
+* Avoid using ```recursive``` code, never have a Lambda function call itself
 
 ## Lambda – Destinations
 
-* Nov 2019: Can configure to send result to a destination
-* Asynchronous invocations - can define destinations for successful and failed event:
+* You can configure to send result to a destination
+* **Asynchronous** invocations - can define destinations for successful and failed event:
 
   {{< figure src="images/uploads/lambda-destinations-1.PNG" width="350" height="350" class="alignright">}}
 
@@ -266,7 +266,7 @@ With Lambda, you can use the language and IDE that you are most familiar with an
   * Amazon SNS
   * AWS Lambda
   * Amazon EventBridge bus
-  > Note: AWS recommends you use destinations instead of DLQ now (but both can be used at the same time)
+  > Note: AWS recommends you use **Destinations** instead of **DLQ** now (but both can be used at the same time)
 
 * Event Source mapping: for discarded event batches
 
@@ -275,16 +275,16 @@ With Lambda, you can use the language and IDE that you are most familiar with an
   * Amazon SQS
   * Amazon SNS
 
-  > Note: you can send events to a DLQ directly from SQS
+  > Note: you can send events to a **DLQ** directly from SQS
 
 ## Version Control With Lambda
 
   * When you use versioning with AWS Lambda you can publish one or more versions of your lambda functions. As a result
     you can work with different variations of your Lambda function in your development workflow, such as Dev, Prod, Beta
     and so on.
-  * Each Lambda function version has an unique ARN. After you publish a version it becomes immutable.
-  * AWS Lambda maintains your latest code in the $LATEST version.
-  * You can refer to your Lambda function using it's ARN. There are 2 ARNs associated with the initial version:
+  * Each Lambda function ```version``` has an unique **ARN**. After you publish a version it becomes ```immutable```.
+  * AWS Lambda maintains your latest code in the ```$LATEST``` version.
+  * You can refer to your Lambda function using it's **ARN**. There are 2 ARNs associated with the initial version:
     * Qualified ARN - The function ARN with the version suffix:
       e.g arn:aws:lambda:us-west-1:396087960458:function:SendMessageFunction:**$LATEST**
     * UnQualified ARN - The function ARN without the version suffix:
@@ -348,16 +348,17 @@ With Lambda, you can use the language and IDE that you are most familiar with an
 
   * Execution:
 
-    * Memory allocation: 128 MB – 3008 MB (64 MB increments)
-    * Maximum execution time: 900 seconds (15 minutes)
+    * Memory allocation: 128 MB – **3008** MB (64 MB increments)
+    * Maximum execution time: **900** seconds (**15** minutes)
     * Environment variables (4 KB)
-    * Disk capacity in the “function container” (in /tmp): 512 MB
-    * Concurrency executions: 1000 (can be increased)
+    * Disk capacity in the “function container” (in ```/tmp```): **512** MB
+    * Concurrency executions: **1000** (can be increased)
+  
   * Deployment:
 
-    * Lambda function deployment size (compressed .zip): 50 MB
-    * Size of uncompressed deployment (code + dependencies): 250 MB
-    * Can use the /tmp directory to load other files at startup
+    * Lambda function deployment size (compressed .zip): **50** MB
+    * Size of uncompressed deployment (code + dependencies): **250** MB
+    * Can use the ```/tmp``` directory to load other files at startup
     * Size of environment variables: 4 KB
 
 {{< figure src="images/uploads/lambda-vpc.png" width="200" height="200" class="alignright">}}
