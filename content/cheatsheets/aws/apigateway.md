@@ -39,7 +39,7 @@ Amazon API Gateway is a fully ```managed``` service that makes it easy for devel
 Before you start writing your APIs, you'll need to decide the type of endpoint that makes sense for the traffic and usage patterns you anticipate.
 
 ### Edge-optimized Endpoint
-Designed to help you reduce client **latency** from ```anywhere```(think 🌎) on the internet:
+Designed to help you reduce client **latency** from ```anywhere```🌎 on the internet:
 
 * If you choose an **edge-optimized** endpoint, API Gateway will automatically configure a ```CloudFront``` distribution that’s fully managed to provide lower **latency** access to your API.
 * This setup reduces your first hit latency.
@@ -71,7 +71,7 @@ There are three main ways to **authorize** API calls to your API Gateway endpoin
 * AWS ```Lambda Authorizers```,  
 * Amazon ```Cognito``` with Cognito user pools.
 
-### Authorization Option Comparison:
+###### Authorization Option Comparison:
 
   Each of these have advantages that should be matched to both your application needs and your organizational standards.
 
@@ -82,7 +82,7 @@ There are three main ways to **authorize** API calls to your API Gateway endpoin
 | Lambda Authorizer Request |        ✔️       |       ✔️       |              |          ✔️         | ✔️                | ✔️                       | Pay per authorizer invoke |   |
 |       Amazon Cognito      |        ✔️       |               |              |          ✔️         |                  |                         | None                      |
 
-* **IAM Authorizers**
+###### IAM Authorizers
 
   * If you have an **internal** service or a restricted number of customers, ```IAM``` is a great choice - especially for applications that use IAM to interact with other AWS services using IAM roles.
   * When you enable IAM authorization, all requests are required to be signed using the AWS Version 4 signing process (also known as Sig v4).
@@ -93,7 +93,7 @@ There are three main ways to **authorize** API calls to your API Gateway endpoin
 
   ![APIGateway-IAMAuthorizer](/images/uploads/APIGateway-IAMAuthorizer.JPG)
 
-* **Lambda Authorizers**
+###### Lambda Authorizers
 
   * If you are using an **OATH** strategy as an organization, you may want to look at Token authorization with a **Lambda Authorizer**.
   * A Lambda authorizer is simply a Lambda function that you can write to perform any custom authorization that you need.
@@ -117,7 +117,7 @@ There are three main ways to **authorize** API calls to your API Gateway endpoin
 
   ![APIGateway-LambdaAuthorizers-Request](/images/uploads/APIGateway-LambdaAuthorizers-Request.JPG)
 
-* **Cognito**
+###### Cognito
 
   * If the consumers are external developers, you probably want to look at using Lambda Authorizers or Amazon Cognito.
   * You can use Amazon ```Cognito``` and an Amazon Cognito ```User Pool``` to control access to your APIs. Cognito User Pools provide a set of APIs that you can integrate into your application to provide authentication. User pools are intended for mobile or web applications where you handle user registration and sign-in directly in the application.
@@ -151,15 +151,15 @@ There are two types of IAM permissions for APIs:
 
   Resource policy and authentication methods(IAM, LambdaAuthorizers, Cognito) work together to grant access to your APIs. Methods for securing your APIs work in **aggregate**.
 
-  #### Example: Limiting Access by User
+  ###### Example: Limiting Access by User
   In this example, the resource policy allows a user from another AWS account  (account-id:user/George) to perform GET requests on the Pets resource of our API.
   ![APIGateway-ResourcePolicy-User](/images/uploads/APIGateway-ResourcePolicy-User.JPG)
 
-  #### Example: Limiting by IP Address
+  ###### Example: Limiting by IP Address
   This resource policy denies any user with a source IP address in one of two specified ranges from accessing the API. This is done by specifying an effect of DENY and an IPAddress condition with an array of source IP addresses.
   ![APIGateway-ResourcePolicy-IP](/images/uploads/APIGateway-ResourcePolicy-IP.JPG)
 
-  ####  Example: Limiting by VPC
+  ######  Example: Limiting by VPC
   This resource policy denies anyone (indicated by the principal = *) coming from the VPC specified as the sourceVPC within the Condition.
   ![APIGateway-ResourcePolicy-VPC](/images/uploads/APIGateway-ResourcePolicy-VPC.JPG)
 
@@ -204,19 +204,6 @@ Depending on the integration type you select, you’ll have to provide different
 
 Once you’ve saved the details of the integration type, the console will display panels that let you add to your Request/Response details. When proxy is not configured, you’ll need to configure both the integration request and the integration response, and set up necessary data mappings between the method request/response and the integration request/response.
 
-### Mapping Templates (AWS & HTTP Integration)
-
-* Mapping templates can be used to modify request / responses
-* Rename / Modify query string parameters
-* Modify body content
-* Add headers
-* Uses Velocity Template Language (VTL): for loop, if etc…
-* Filter output results (remove unnecessary data)
-
-![APIGateway-Mapping](/images/uploads/apigateway-mapping-template.PNG)
-
-For example, you might add query strings or custom header parameters to your methods, or update the integration request to map input data from the method request to the format required by the backend.
-
 ### Test your API methods
 
 {{< figure src="images/uploads/apigateway-test.PNG" width="300" height="250" class="alignright">}}
@@ -245,6 +232,19 @@ There are 5 possible options:
 ### AWS Services
   * AWS Service as an integration type lets an API expose **AWS service** actions -for example you might drop a message directly into an ```SQS``` queue.
 
+###### Mapping Templates (AWS & HTTP Integration)
+
+* Mapping templates can be used to modify request / responses
+* Rename / Modify query string parameters
+* Modify body content
+* Add headers
+* Uses Velocity Template Language (VTL): for loop, if etc…
+* Filter output results (remove unnecessary data)
+
+![APIGateway-Mapping](/images/uploads/apigateway-mapping-template.PNG)
+
+For example, you might add query strings or custom header parameters to your methods, or update the integration request to map input data from the method request to the format required by the backend.
+
 ### Mock
   * API Gateway returns a response without sending the request to the backend.
   * This is a good idea for a Health check endpoint to test your API.
@@ -254,7 +254,6 @@ There are 5 possible options:
   * VPC Link allows you to expose VPC resources outside your VPC.
   * Take an endpoint on your EC2 instance that’s not public - API Gateway can’t access it unless you use the VPC link and you have to have a Network Load Balancer on your backend.
   * For an API developer, a VPC Link is functionally equivalent to an integration endpoint.
-
 
 ## Deployment
 
@@ -326,8 +325,7 @@ This can be useful for things like preventing one consumer from using all of you
   * API Key Quota by day, week, month
   * API Key Usage by daily usage records
 
-  Here is an example where you might throttle with usage plans for specific types of consumers. In this case, you want to limit your mobile consumers to invoke your API at a maximum rate of 50 requests per second.
-  While for your partners, you want to enforce a quota of 10,000 requests per day.
+  Here is an example where you might throttle with usage plans for specific types of consumers. In this case, you want to limit your mobile consumers to invoke your API at a maximum rate of 50 requests per second. While for your partners, you want to enforce a quota of 10,000 requests per day.
   With usage plans, you can create both the throttle rate limit and apply a daily quota.
 
   ![APIGateway-Throttling](/images/uploads/APIGateway-Throttling.JPG)

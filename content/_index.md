@@ -21,7 +21,7 @@ sections:
             position: center
             color: '#5C4033'
         - title: CheatSheets 📚
-          content: 'These Cheatsheets are for the little things you never remember :bell:'
+          content: 'Cheat Sheets To Help You Get Started 🚀'
           align: left
           background:
             image:
