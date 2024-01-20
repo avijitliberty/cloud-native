@@ -229,6 +229,14 @@ AWS **Instance Metadata** allows AWS EC2 instances to ‚Äùlearn about themselves‚
              --invocation-type Event \
              --region us-west-1 response.json
 
+  ## Create the Lambda function as a zip file
+  aws lambda create-function \
+             --zip-file fileb://function.zip \
+             --function-name lambda-xray-with-dependencies \
+             --runtime nodejs16.x \
+             --handler index.handler 
+             --role <ROLE_ARN>
+
   ```
 
 ### DynamoDB

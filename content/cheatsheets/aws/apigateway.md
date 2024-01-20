@@ -15,67 +15,65 @@ Build, Deploy and Manage APIs
 
 ## Overview
 
-Amazon API Gateway is a fully managed service that makes it easy for developers to publish, maintain,
-monitor and secure APIs at any scale. With a few clicks in the AWS management console you can create an API that acts as a front door for applications to access data, business logic or functionality from your backend services such as applications running on EC2, code running on Lambda or any web application.
+Amazon API Gateway is a fully ```managed``` service that makes it easy for developers to publish, maintain, monitor and secure APIs at any scale. You can create an API that acts as a front door for applications to access data, business logic or functionality from your backend services such as applications running on EC2, code running on Lambda or any web application.
 
 ## Features
 
 * Developer Features in Amazon API Gateway:
   * Exposes HTTPS endpoints to define a RESTful API.
-  * Servrless-ly connect to other AWS services like Lambda or DynamoDB
-  * Maintain multiple versions of your API.
-  * Transform or validate request/response data
-  * Generate and export a fully working SDK of your API, which you can use in your own application code. This SDK feature supports several languages such as Java, Javascript, iOS, Ruby SDKs, and several other programming languages.
+  * ```Serverless-ly``` connect to other AWS services like ```Lambda```,```DynamoDB```,```SQS``` and so on.
+  * Maintain multiple **versions** of your API.
+  * **Transform** or **validate** request/response data
+  * Generate and export a fully working **SDK** of your API, which you can use in your own application code. This SDK feature supports several languages such as Java, Javascript, iOS, Ruby SDKs, and several other programming languages.
   * Import/Export to Swagger
 
 * Features for Managing API Access:
-  * Built-in, flexible authorization options using IAM roles, AWS Lambda authorizers, or Amazon Cognito.
-  * Track and control usage by API key
-  * Throttle requests to prevent attacks.
+  * Built-in, flexible **authorization** options using IAM roles, AWS Lambda authorizers, or Amazon Cognito.
+  * Track and control **usage** by API key
+  * **Throttle** requests to prevent attacks.
   * Connect to Cloudwatch to log all requests for monitoring
-  * You can enable API caching in Amazon API Gateway. It allows you to cache your endpoints response.
-    With caching enabled you can reduce the number of calls made to your end point and also improve the latency of requests to your API. So when you enable API caching for a stage API gateway caches a response from your end point for specified TTL time in seconds.
+  * You can enable API **caching** in API Gateway. It allows you to cache your endpoints response. With caching enabled you can reduce the number of calls made to your end point and also improve the **latency** of requests to your API. So when you enable API caching for a ```stage``` API gateway caches a response from your end point for specified **TTL** time in seconds.
 
 ## Design Considerations
 
 Before you start writing your APIs, you'll need to decide the type of endpoint that makes sense for the traffic and usage patterns you anticipate.
 
 ### Edge-optimized Endpoint
-Designed to help you reduce client latency from anywhere on the internet:
+Designed to help you reduce client **latency** from ```anywhere```(think 🌎) on the internet:
 
-* If you choose an edge-optimized endpoint, API Gateway will automatically configure a CloudFront distribution that’s fully managed to provide lower latency access to your API.
+* If you choose an **edge-optimized** endpoint, API Gateway will automatically configure a ```CloudFront``` distribution that’s fully managed to provide lower **latency** access to your API.
 * This setup reduces your first hit latency.
-* The other benefit of using a managed CloudFront distribution is that you don’t have to pay for or manage it separately from API Gateway.
+* The other benefit of using a managed CloudFront distribution is that you don’t have to **pay** for or **manage** it separately from API Gateway.
 
 ![APIGateway-EdgeOptimized](/images/uploads/APIGateway-EdgeOptimized.JPG)
 
 ### Regional Endoint
 
 ![APIGateway-RegionalEndpoint](/images/uploads/APIGateway-RegionalEndpoint.JPG)
-Designed to reduce latency when calls are made from the same region as the API:
+Designed to reduce **latency** when calls are made from the same ```region``` as the API:
 
-* In this model, API Gateway does not deploy its own CloudFront distribution in front of your API. Instead, traffic destined for your API will be directed straight at the API endpoint in the region where you’ve deployed it.
+* In this model, API Gateway does **not** deploy its own CloudFront distribution in front of your API. Instead, traffic destined for your API will be directed straight at the API endpoint in the ```region``` where you’ve deployed it.
 * This gives you lower latency for applications that are invoking your API from within the same AWS Region. For example, an API that is going to be accessed from EC2 instances within the same region.
-* This API endpoint also allows you the flexibility to deploy your own CloudFront distribution in front of API Gateway and control that distribution using your own settings for customized scenarios. An example of that might be to design for disaster recovery scenarios or implement load balancing in a very customized way.
+* This API endpoint also allows you the **flexibility** to deploy your own CloudFront distribution in front of API Gateway and control that distribution using your own settings for customized scenarios. An example of that might be to design for disaster recovery scenarios or implement load balancing in a very customized way.
 
 ### Private Endpoint
-Designed to expose APIs only inside your VPC:
+Designed to expose APIs only inside your ```VPC```:
 
-* This endpoint type is still managed by API Gateway, but requests are only routable, and can only originate, from within a single VPC that you control.
-* This is designed for applications that have very secure workloads, like healthcare or financial data that cannot be exposed publicly on the internet.
-* There are no data transfer-out charges for private APIs. However, AWS PrivateLink charges apply when using private APIs in API Gateway.
+* This endpoint type is still managed by API Gateway, but requests are only routable, and can only originate, from within a single ```VPC``` that you control.
+* This is designed for applications that have very **secure** workloads, like healthcare or financial data that cannot be exposed publicly on the internet.
+* There are no data **transfer-out** charges for private APIs. However, AWS ```PrivateLink``` charges apply when using private APIs in API Gateway.
 ![APIGateway-PrivateEndpoint](/images/uploads/APIGateway-PrivateEndpoint.JPG)
 
 ## Authorizers
 
-There are three main ways to authorize API calls to your API Gateway endpoints:
-* IAM and Signature version 4 (also known as Sig v4),
-* AWS Lambda Authorizers,  
-* Amazon Cognito with Cognito user pools.
+There are three main ways to **authorize** API calls to your API Gateway endpoints:
+* ```IAM``` and Signature version 4 (also known as Sig v4),
+* AWS ```Lambda Authorizers```,  
+* Amazon ```Cognito``` with Cognito user pools.
 
 ### Authorization Option Comparison:
 
-  Each of these has advantages that should be matched to both your application needs and your organizational standards.
+  Each of these have advantages that should be matched to both your application needs and your organizational standards.
 
   |                           | Authentication | Authorization | Signature V4 | Cognito User Pools | Third-Party Auth | Multiple Header support |      Additional Costs     |
 |---------------------------|:--------------:|:-------------:|:------------:|:------------------:|:----------------:|:-----------------------:|:-------------------------:|
@@ -86,37 +84,35 @@ There are three main ways to authorize API calls to your API Gateway endpoints:
 
 * **IAM Authorizers**
 
-  * If you have an internal service or a restricted number of customers,  IAM is a great choice - especially for applications that use IAM to interact with other AWS services using IAM roles.
+  * If you have an **internal** service or a restricted number of customers, ```IAM``` is a great choice - especially for applications that use IAM to interact with other AWS services using IAM roles.
   * When you enable IAM authorization, all requests are required to be signed using the AWS Version 4 signing process (also known as Sig v4).
-  * The process uses your AWS access key and secret key to compute an HMAC signature using SHA 256.
-  * You can obtain these keys as an IAM user or by assuming an IAM role.
-  * The key information is added to the Authorization header, and behind the scenes, API Gateway will take that signed request, parse it, and determine whether or not the user who signed the request has the IAM permissions to invoke your API. If not, API Gateway will simply deny and reject that request.
-  * So for this type of authentication, your requestor must have AWS credentials.
+  * The process uses your AWS **access key** and **secret key** to compute an HMAC signature using SHA 256.
+  * You can obtain these keys as an **IAM** user or by assuming an IAM ```role```.
+  * The key information is added to the Authorization **header**, and behind the scenes, API Gateway will take that signed request, parse it, and determine whether or not the user who signed the request has the IAM permissions to invoke your API. If not, API Gateway will simply deny and reject that request.
+  * So for this type of authentication, your requestor must have AWS **credentials**.
 
   ![APIGateway-IAMAuthorizer](/images/uploads/APIGateway-IAMAuthorizer.JPG)
 
 * **Lambda Authorizers**
 
-  * If you are using an OATH strategy as an organization, you may want to look at Token authorization with a Lambda Authorizer.
+  * If you are using an **OATH** strategy as an organization, you may want to look at Token authorization with a **Lambda Authorizer**.
   * A Lambda authorizer is simply a Lambda function that you can write to perform any custom authorization that you need.
-  * There are two types of Lambda Authorizers: Token and Request.
+  * There are two types of Lambda Authorizers: ```Token``` and ```Request```.
   * When a client calls your API, API Gateway verifies whether a Lambda authorizer is configured for the API method.
-  If so, API Gateway calls the Lambda function. In this call, API Gateway supplies the authorization token (or the request parameters based on the type of authorizer), and the Lambda function returns a policy that allows or denies the caller’s request.
-  * API Gateway also supports an optional policy cache that you can configure for your Lambda Authorize.
-  This feature increases performance by reducing the number of invocations of your Lambda authorizer for previously authorized tokens. And with this cache, you can configure a custom TTL.
-  * To make it easy to get started with this method, you can choose the API Gateway Lambda Authorizer blueprint when creating your authorizer function from the Lambda console.
+  If so, API Gateway calls the Lambda function. In this call, API Gateway supplies the authorization **token** (or the **request parameters** based on the type of authorizer), and the Lambda function returns a policy that **allows** or **denies** the caller’s request.
+  * API Gateway also supports an optional policy **cache** that you can configure for your Lambda Authorizer. This feature increases performance by reducing the number of invocations of your Lambda authorizer for previously authorized tokens. And with this cache, you can configure a custom **TTL**.
+  * To make it easy to get started with this method, you can choose the API Gateway Lambda Authorizer **blueprint** when creating your authorizer function from the Lambda console.
 
   ![APIGateway-LambdaAuthorizers](/images/uploads/APIGateway-LambdaAuthorizers.JPG)
 
-  * For Lambda authorizers of the TOKEN type, API Gateway passes the source token to the Lambda function as a JSON input. Based on the value of this token, your Lambda function will determine whether to allow the request.
+  * For Lambda authorizers of the ```TOKEN``` type, API Gateway passes the source token to the Lambda function as a JSON input. Based on the value of this token, your Lambda function will determine whether to allow the request.
   * If it does allow the request, then your Lambda function will return an IAM policy that **Allows execute-API: Invoke** on the particular API resources that you specified. This lets a caller invoke the specified methods that are defined in the API in the JSON output.
   * If your Lambda function denies the request, you’ll need to return a JSON policy document that **Denies** access to the API methods and resources specified. In this case, the client receives a 403 error.
 
   ![APIGateWay-LambdaAuthizers-Token](/images/uploads/APIGateWay-LambdaAuthizers-Token.JPG)
 
-  * Lambda authorizers of REQUEST type are useful if you need more information about the request itself before authorizing it.
-  * Request type authorizers allow you to include additional payload in the JSON input to your Lambda function.
-  So if you want to make authorizations that are based on information found in the request header, query string parameters, or the body of the request, use the REQUEST type.
+  * Lambda authorizers of ```REQUEST``` type are useful if you need more information about the request itself before authorizing it.
+  * Request type authorizers allow you to include additional payload in the JSON input to your Lambda function. So if you want to make authorizations that are based on information found in the request **header**, **query string** parameters, or the **body** of the ```request```, use the REQUEST type.
   * When API Gateway receives the request and invokes your custom authorizer, it will include this additional request information. You can then use it as part of evaluating whether or not to authorize the request.
 
   ![APIGateway-LambdaAuthorizers-Request](/images/uploads/APIGateway-LambdaAuthorizers-Request.JPG)
@@ -124,38 +120,36 @@ There are three main ways to authorize API calls to your API Gateway endpoints:
 * **Cognito**
 
   * If the consumers are external developers, you probably want to look at using Lambda Authorizers or Amazon Cognito.
-  * You can use Amazon Cognito and an Amazon Cognito User Pool to control access to your APIs.
-  Cognito User Pools provide a set of APIs that you can integrate into your application to provide authentication.
-  User pools are intended for mobile or web applications where you handle user registration and sign-in directly in the application.
-  * To use an Amazon Cognito user pool with your API, you must first create an authorizer of the COGNITO_USER_POOLS authorizer type, and then configure an API method to use that authorizer.
-  * After a user is authenticated against the user pool, they obtain an Open ID Connect token, or OIDC token, formatted in a JSON web token. Users who have signed in to your application will have tokens provided to them by the user pool. Then that token can be used by your application to inject information into a header in subsequent API calls that you make against your API Gateway endpoint.
+  * You can use Amazon ```Cognito``` and an Amazon Cognito ```User Pool``` to control access to your APIs. Cognito User Pools provide a set of APIs that you can integrate into your application to provide authentication. User pools are intended for mobile or web applications where you handle user registration and sign-in directly in the application.
+  * To use an Amazon Cognito user pool with your API, you must first create an **authorizer** of the ```COGNITO_USER_POOLS``` authorizer type, and then configure an API method to use that authorizer.
+  * After a user is authenticated against the user pool, they obtain an Open ID Connect token, or ```OIDC``` token, formatted as a JSON web token. Users who have signed in to your application will have tokens provided to them by the user pool. Then that token can be used by your application to inject information into a **header** in subsequent API calls that you make against your API Gateway endpoint.
 
 ![APIGateway-CognitoAuthorizer](/images/uploads/APIGateway-CognitoAuthorizer.JPG)
-
 
 ## IAM Permissions
 
 There are two types of IAM permissions for APIs:
 ![APIGateway-IAMPermissions](/images/uploads/APIGateway-IAMPermissions.JPG)
 
-* Invoke Permissions:
+* **Invoke** Permissions:
 
-  For the execute-API permission, create IAM policies that permit a specified API caller to invoke the desired API method. To apply this IAM policy on any API method, you need to configure the API method to use an authorization type of AWS_IAM. Once you have associated this authorization type with your API method, you can now allow users with this permission to invoke your API.
+  For the execute-API permission, create ```IAM``` policies that permit a specified API caller to invoke the desired API method. To apply this IAM policy on any API method, you need to configure the API method to use an authorization type of AWS_IAM. Once you have associated this authorization type with your API method, you can now allow users with this permission to invoke your API.
 
-  This example grants "Allow" Invoke permissions on the POST method of mydemoresource API.
+  This example grants ```Allow``` Invoke permissions on the **POST** method of mydemoresource API.
   ![APIGateway-InvokePermissions](/images/uploads/APIGateway-InvokePermissions.JPG)
 
-* Manage Permissions:
+* **Manage** Permissions:
 
   To allow an API developer to create and manage an API in API Gateway, you need IAM permission policies that allow a specified API developer to create, update, deploy, view, or delete required API entities. To do that, create a policy using the apigateway:HTTP_VERB format, associated with the specific resource using the verb that you want to permit or deny in the policy.
 
   In this example, the user with this policy is limited to perform the GET method requests on one of the API resources, but is permitted to take all of the actions (*) on the second resource.
   ![APIGateway-ManagePermissions](/images/uploads/APIGateway-ManagePermissions.JPG)
 
-* Resource Policies
-  In addition to an IAM policy to grant permission to a user, group, or role, you can also apply policies directly on API Gateway using a resource policy. A resource policy is a JSON policy document that you attach to an API to limit access by users from a specified account, IP address range, VPC, or VPC endpoint.
+* **Resource** Policies:
 
-  Resource policy and authentication methods(IAM, LambdaAuthorizers, Cognito) work together to grant access to your APIs. Methods for securing your APIs work in aggregate.
+  In addition to an IAM policy to grant permission to a user, group, or role, you can also apply policies directly on API Gateway using a ```resource policy```. A resource policy is a JSON policy document that you attach to an API to limit access by users from a specified **account**, **IP address** range, **VPC**, or **VPC endpoint**.
+
+  Resource policy and authentication methods(IAM, LambdaAuthorizers, Cognito) work together to grant access to your APIs. Methods for securing your APIs work in **aggregate**.
 
   #### Example: Limiting Access by User
   In this example, the resource policy allows a user from another AWS account  (account-id:user/George) to perform GET requests on the Pets resource of our API.
@@ -175,14 +169,14 @@ The basic steps for creating an API from the API Gateway console can be mapped d
 
 ### Create and name API
 
-<img align="right" width="300" height="200" src="/images/uploads/apigateway-createapi.PNG">
+{{< figure src="images/uploads/apigateway-createapi.PNG" width="300" height="200" class="alignright">}}
 
 Choose the Create API option from the console. The other key selection you must make to save your API is the Endpoint type. When you save your API, AWS generates a unique ID for that API name, which becomes part of the hostname in the invoke URL.
 <br/><br/><br/><br/>
 
 ### Add Resources
 
-<img align="right" width="300" height="250" src="/images/uploads/apigateway-addresource.PNG">
+{{< figure src="images/uploads/apigateway-addresource.PNG" width="300" height="250" class="alignright">}}
 
 Use the Actions/Create Resource option to create a resource.
 You can create parent-child relationships among your resources for an API, and you can specify path parameters using curly brackets.
@@ -190,14 +184,14 @@ You can create parent-child relationships among your resources for an API, and y
 
 ### Configure Resource as Proxy
 
-<img align="right" width="300" height="250" src="/images/uploads/apigateway-configure-resource.PNG">
+{{< figure src="images/uploads/apigateway-configure-resource.PNG" width="300" height="250" class="alignright">}}
 
 If you choose this option,  it will automatically create a special HTTP method called “Any.” A proxy resource is expressed by a special resource path parameter of {proxy+}, often referred to as a greedy path parameter. The + sign indicates whichever child resources are appended to it.
 <br/><br/><br/><br/>
 
 ### Create Method
 
-<img align="right" width="300" height="250" src="/images/uploads/apigateway-createmethod.PNG">
+{{< figure src="images/uploads/apigateway-createmethod.PNG" width="300" height="250" class="alignright">}}
 
 Select Create Method from the Action menu, you’ll be prompted to choose an HTTP verb. Once that’s done, you’ll be prompted to complete the other setup items, including timeout and integration type.
 
@@ -206,7 +200,7 @@ Depending on the integration type you select, you’ll have to provide different
 
 ### Edit Method Details
 
-<img align="right" width="300" height="250" src="/images/uploads/apigateway-editmethod.PNG">
+{{< figure src="images/uploads/apigateway-editmethod.PNG" width="300" height="250" class="alignright">}}
 
 Once you’ve saved the details of the integration type, the console will display panels that let you add to your Request/Response details. When proxy is not configured, you’ll need to configure both the integration request and the integration response, and set up necessary data mappings between the method request/response and the integration request/response.
 
@@ -225,7 +219,7 @@ For example, you might add query strings or custom header parameters to your met
 
 ### Test your API methods
 
-<img align="right" width="300" height="250" src="/images/uploads/apigateway-test.PNG">
+{{< figure src="images/uploads/apigateway-test.PNG" width="300" height="250" class="alignright">}}
 
 When you select the test option, you’ll be prompted for any required values and can execute your tests.
 <br/><br/><br/><br/>
@@ -237,11 +231,11 @@ As part of creating the method you must choose an integration type.
 There are 5 possible options:
 
 ### Lambda Functions
-  * When you are using API Gateway as the gateway to a Lambda function, you’ll use Lambda integration.
-  * The proxy option is highly recommended for integration with a Lambda function. This will result in requests being proxied to Lambda with request details available to your function handler in the event parameter, supporting a streamlined integration setup.
+  * When you are using API Gateway as the gateway to a **Lambda** function, you’ll use Lambda integration.
+  * The **proxy** option is highly recommended for integration with a Lambda function. This will result in requests being proxied to Lambda with request details available to your function handler in the **event** parameter, supporting a streamlined integration setup.
   * When proxy is not configured, you’ll need to configure both the integration request and the integration response, and set up necessary data mappings between the method request/response and the integration request/response. If the proxy option is used, you don’t set the integration request or the integration response.
   * The setup can evolve with the backend without requiring you to tear down the existing setup.
-  * For integrations with Lambda functions, you will need to set an IAM role with required permissions for API Gateway to call the backend on your behalf.
+  * For integrations with Lambda functions, you will need to set an ```IAM``` role with required permissions for API Gateway to call the backend on your behalf.
 
 
 ### HTTP EndPoints
@@ -249,12 +243,12 @@ There are 5 possible options:
   * API Gateway passes the incoming request from the client to the HTTP endpoint, and passes the outgoing response from the HTTP endpoint to the client.
 
 ### AWS Services
-  * AWS Service as an integration type lets an API expose AWS service actions -for example you might drop a message directly into an SQS queue.
+  * AWS Service as an integration type lets an API expose **AWS service** actions -for example you might drop a message directly into an ```SQS``` queue.
 
 ### Mock
   * API Gateway returns a response without sending the request to the backend.
   * This is a good idea for a Health check endpoint to test your API.
-  * Any time you want a hardcoded response to your API call, use a MOCK integration.
+  * Any time you want a **hardcoded** response to your API call, use a ```MOCK``` integration.
 
 ### VPC Link
   * VPC Link allows you to expose VPC resources outside your VPC.
@@ -275,7 +269,7 @@ At that point, a base URI is generated and displayed on the API stage editor. Th
 
 ### Use Stages to Differentiate your APIs
 
-<img align="right" width="200" height="200" src="/images/uploads/APIGateway-Stages.JPG">
+{{< figure src="images/uploads/APIGateway-Stages.JPG" width="200" height="200" class="alignright">}}
 
 * Use different stages by environment or customer
 * Use **stage variables** to increase deployment flexibility
@@ -347,7 +341,7 @@ This can be useful for things like preventing one consumer from using all of you
 
 ### Caching
 
-<img align="right" width="300" height="250" src="/images/uploads/apigateway-cache.PNG">
+{{< figure src="images/uploads/apigateway-cache.PNG" width="300" height="250" class="alignright">}}
 
 * Caching reduces the number of calls made to the backend
 * Default TTL (time to live) is 300 seconds (min: 0s, max: 3600s)
@@ -364,13 +358,13 @@ This can be useful for things like preventing one consumer from using all of you
 
 ### Canary Deployments
 
-Canary deployments allow you to send a percentage of traffic to your “canary” while leaving the bulk of your traffic on a known good version of your API until the new version has been verified.
+**Canary** deployments allow you to send a percentage of traffic to your ```canary``` while leaving the bulk of your traffic on a known good version of your API until the new version has been verified.
 
-It makes available a base version and updated versions of the API on the same stage, allowing you to introduce new features in the same environment for the base version.
+It makes available a base version and updated versions of the API on the **same** stage (usually Prod), allowing you to introduce new features in the same environment for the base version.
 
 To set up a canary deployment via the console, select a stage, and then select the Canary tab for that stage.
 
-* At an API stage, you can also export the API definitions or generate an SDK for your users to call the API using a supported programming language
+![APIGateway-Canary](/images/uploads/APIGateway-Canary.png)
 
 ### Generate an SDK
 

@@ -97,7 +97,7 @@ Run Code Serverless
   * **Asynchronous** Event Sources
 
     * Asynchronous events are placed in an **Event Queue**, and the requestor doesn't wait for the function to complete.
-    * This model makes sense for batch processes. With an async event, Lambda automatically **retries** the invocation **twice** more on your behalf. You also have the option to enable a ```Dead Letter Queue``` on your Lambda function.
+    * This model makes sense for batch processes. With an async event, Lambda automatically **retries** the invocation **twice** more on your behalf. You also have the option to enable a ```Dead Letter Queue```(**DLQ**) on your Lambda function.
     * Make sure the processing is **idempotent** (in case of retries)
     * There are two error handling options to give you more control over failed records from asynchronous event sources: ```Maximum Event Age``` and ```Maximum Retry Attempts```.
     * To invoke functions asynchronously via API, use **Event** invocation type.
@@ -166,19 +166,40 @@ Checkout CLI references here: [Lambda-CLI]({{< ref "/cheatsheets/aws/aws-cli.md#
          * Messages with the **same GroupID** will be processed **in-order**
          * The Lambda function scales to the number of active **message groups**
 
+## Lambda – Destinations
+
+* You can configure to send result to a destination
+* **Asynchronous** invocations - can define destinations for successful and failed event:
+
+  {{< figure src="images/uploads/lambda-destinations-1.PNG" class="alignright">}}
+
+  * Amazon SQS
+  * Amazon SNS
+  * AWS Lambda
+  * Amazon EventBridge bus
+  > Note: AWS recommends you use **Destinations** instead of **DLQ** now (but both can be used at the same time)
+
+{{< figure src="images/uploads/lambda-destinations-2.PNG" class="alignright">}}
+
+* Event Source mapping: for discarded event batches
+  * Amazon SQS
+  * Amazon SNS
+
+  > Note: you can send events to a **DLQ** directly from SQS
+
 ## Lifecycle of a Lambda function
 
-  1. When a function is first invoked, an execution context is launched and bootstrapped. This execution context initializes any external dependencies of your lambda code, database connections, HTTP clients, SDK client etc. Once the context is bootstrapped, your function code executes. Then, Lambda freezes the execution context, expecting additional invocations. The execution context includes the /tmp directory
+  1. When a function is first invoked, an execution context is launched and **bootstrapped**. This execution context initializes any external dependencies of your lambda code, database connections, HTTP clients, SDK client etc. Once the context is bootstrapped, your function code executes. Then, Lambda **freezes** the execution context, expecting additional invocations. The execution context includes the ```/tmp``` directory
 
-  2. If another invocation request for the function is made while the environment is in this state, that request goes through a warm start. With a warm start, the available frozen container is thawed and immediately begins code execution without going through the bootstrap process.
+  2. If another invocation request for the function is made while the environment is in this state, that request goes through a **warm** start. With a warm start, the available frozen container is thawed and immediately begins code execution without going through the bootstrap process.
 
   3. This thaw and freeze cycle continues as long as requests continue to come in consistently. But if the environment becomes idle for too long, the execution environment is recycled.
 
-  4. A subsequent request starts the lifecycle over, requiring the environment to be launched and bootstrapped. This is a cold start.
+  4. A subsequent request starts the lifecycle over, requiring the environment to be launched and bootstrapped. This is a **cold** start.
 
   {{< video library="true" src="Lambda-LifeCycle.mp4" controls="yes" >}}
 
-  > In 2019, AWS introduced **provisioned concurrency** to give the ability to keep a number of environments "warm" to prevent cold starts from impacting your function's performance.
+  > In 2019, AWS introduced **provisioned concurrency** to give the ability to keep a number of environments **warm** to prevent cold starts from impacting your function's performance.
 
 ## Lambda Concurrency and Throttling
 
@@ -245,7 +266,7 @@ With Lambda, you can use the language and IDE that you are most familiar with an
    * Database Connection Strings, S3 bucket, etc… don’t put these values in your code
    * Passwords, sensitive values… they should be encrypted using KMS
 
-* If your Lambda function needs disk space to perform operations, you can make use the ```/tmp``` directory (Max size is 512MB). The directory content remains when the execution context is ```frozen```, providing transient **cache** that can be used for multiple invocations.(helpful to checkpoint your work). For permanent persistence of object (non temporary), use **S3**.
+* If your Lambda function needs disk space to perform operations, you can make use the ```/tmp``` directory. The directory content remains when the execution context is ```frozen```, providing transient **cache** that can be used for multiple invocations.(helpful to checkpoint your work). For permanent persistence of object (non temporary), use **S3**.
 
 * Minimize your deployment package size to its runtime necessities.
 
@@ -255,46 +276,30 @@ With Lambda, you can use the language and IDE that you are most familiar with an
 
 * Avoid using ```recursive``` code, never have a Lambda function call itself
 
-## Lambda – Destinations
-
-* You can configure to send result to a destination
-* **Asynchronous** invocations - can define destinations for successful and failed event:
-
-  {{< figure src="images/uploads/lambda-destinations-1.PNG" width="350" height="350" class="alignright">}}
-
-  * Amazon SQS
-  * Amazon SNS
-  * AWS Lambda
-  * Amazon EventBridge bus
-  > Note: AWS recommends you use **Destinations** instead of **DLQ** now (but both can be used at the same time)
-
-* Event Source mapping: for discarded event batches
-
-  {{< figure src="images/uploads/lambda-destinations-2.PNG" width="350" height="350" class="alignright">}}
-
-  * Amazon SQS
-  * Amazon SNS
-
-  > Note: you can send events to a **DLQ** directly from SQS
-
 ## Version Control With Lambda
 
-  * When you use versioning with AWS Lambda you can publish one or more versions of your lambda functions. As a result
-    you can work with different variations of your Lambda function in your development workflow, such as Dev, Prod, Beta
-    and so on.
+  * When you use **versioning** with AWS Lambda you can publish one or more versions of your lambda functions. As a result you can work with different variations of your Lambda function in your development workflow, such as Dev, Prod, Beta and so on.
   * Each Lambda function ```version``` has an unique **ARN**. After you publish a version it becomes ```immutable```.
   * AWS Lambda maintains your latest code in the ```$LATEST``` version.
-  * You can refer to your Lambda function using it's **ARN**. There are 2 ARNs associated with the initial version:
-    * Qualified ARN - The function ARN with the version suffix:
-      e.g arn:aws:lambda:us-west-1:396087960458:function:SendMessageFunction:**$LATEST**
-    * UnQualified ARN - The function ARN without the version suffix:
+  * After creating your Lambda function (the $LATEST version), you can publish a **Version 1** of it.
+  * You can refer to your Lambda function using it's **ARN**. There are 2 ARNs associated with the Lambda function:
+    * **Qualified** ARN - The function ARN with the version suffix: 
+      e.g arn:aws:lambda:us-west-1:396087960458:function:SendMessageFunction:**v1**
+    * **UnQualified** ARN - The function ARN without the version suffix:
       e.g arn:aws:lambda:us-west-1:396087960458:function:SendMessageFunction
-  * After creating your Lambda function (the $LATEST version), you can publish a Version 1 of it.
-    By creating an Alias named "PROD" that points to Version 1, you can now use the "PROD" alias to invoke Version 1 of the Lambda function.
-  * You can update the code (the $LATEST version) with improvements and then publish a Version 2.
-    You can promote Version 2 to production by remapping the PROD alias so that it points to Version 2.
-    If there was any issue, you can easily rollback to Version 1 by remapping back.
-  * Cannot split traffic with $LATEST version, instead create an Alias to latest and split that way.
+  * When you invoke a function using an **UnQualified** ARN, Lambda implicitly invokes **$LATEST**.
+  * You could also create ```Aliases``` for your Lambda function. They are **pointers** to Lambda function versions. You **can't** use an **UnQualified** ARN to create an alias.
+  * We can define a **DEV**, **TEST**, **PROD** aliases and have them point to different lambda versions.
+  * Aliases are ```mutable```
+  * By creating an ```Alias``` named **PROD** that points to **V1**, you can now use the PROD alias to invoke V1 version of the Lambda function.
+  * You can update the code (the **$LATEST** version) with improvements and then publish a **V2**. You can promote V2 to production by **remapping** the **PROD** alias so that it points to V2 now. If there was any issue, you can easily rollback to V1 by remapping back.
+  * Aliases enable **Canary** deployment by assigning ```weights``` to lambda functions
+  * Aliases enable stable configuration of our event triggers / destinations
+  * Aliases have their own ```ARNs``` 
+  * Aliases **cannot** reference other **aliases**
+  * You cannot split traffic with **$LATEST** version, instead create an Alias to latest and split that way.
+
+  ![Lambda-Version](/images/uploads/lambda-version-alias.png)
 
 ## Monitoring
 
@@ -323,22 +328,19 @@ With Lambda, you can use the language and IDE that you are most familiar with an
 
   ### Dead Letter Queues
 
-  Dead Letter Queues (DLQs) help you capture application errors that you cannot just discard but must respond to.
+  Dead Letter Queues (```DLQs```) help you capture application errors that you cannot just discard but must respond to.
 
   * Use DLQs to analyze failures for follow-up or code corrections.
-  * Available for asynchronous and non-stream polling events
-  * Can be an Amazon SNS topic or Amazon SQS queue
+  * Available for **asynchronous** and **non-stream** polling events
+  * Can be an Amazon ```SNS``` topic or Amazon ```SQS``` queue
 
   ### X-Ray
 
-  * AWS X-Ray is a service that collects data about your requests that your application serves and it
-    provides you with tools you can use to view filter and gain insights into that data to identify issues
-    and opportunities for optimization. For any traced request to your application, you can see detailed information not only about the request and response, but also about calls that your application makes to downstream AWS resources, microservices, databases and HTTP Web APIs.
+  * AWS ```X-Ray``` is a service that collects data about your requests that your application serves and it provides you with tools you can use to view filter and gain insights into that data to identify issues and opportunities for optimization. 
 
-  * Enable in Lambda configuration (Active Tracing)
-  * Runs the X-Ray daemon for you
-  * Use AWS X-Ray SDK in Code
-  * Ensure Lambda Function has a correct IAM Execution Role - The managed policy is called AWSXRayDaemonWriteAccess
+  * Enable in Lambda configuration (```Active Tracing```). Runs the X-Ray **daemon** for you
+  * Use AWS X-Ray **SDK** in Code. 
+  * Ensure Lambda Function has a correct IAM Execution Role - The managed policy is called ```AWSXRayDaemonWriteAccess```
   * Environment variables to communicate with X-Ray
     * _X_AMZN_TRACE_ID: contains the tracing header
     * AWS_XRAY_CONTEXT_MISSING: by default, LOG_ERROR
@@ -348,8 +350,8 @@ With Lambda, you can use the language and IDE that you are most familiar with an
 
   * Execution:
 
-    * Memory allocation: 128 MB – **3008** MB (64 MB increments)
-    * Maximum execution time: **900** seconds (**15** minutes)
+    * Memory allocation: 128 MB – **10 GB** MB (1 MB increments). The more RAM you add, the more **vCPU** credits you get.
+    * Maximum execution time: Default **3 secs** - **900 seconds** (15 minutes)
     * Environment variables (4 KB)
     * Disk capacity in the “function container” (in ```/tmp```): **512** MB
     * Concurrency executions: **1000** (can be increased)
@@ -358,24 +360,45 @@ With Lambda, you can use the language and IDE that you are most familiar with an
 
     * Lambda function deployment size (compressed .zip): **50** MB
     * Size of uncompressed deployment (code + dependencies): **250** MB
-    * Can use the ```/tmp``` directory to load other files at startup
+    * Can use the ```/tmp``` directory to load other files at startup. Max size is 10GB.
     * Size of environment variables: 4 KB
 
-{{< figure src="images/uploads/lambda-vpc.png" width="200" height="200" class="alignright">}}
 
 ## Lambda VPC Access
 
-* You must define the VPC ID, the Subnets and the Security Groups
-* Lambda will create an ENI (Elastic Network Interface) in your subnets
-* AWSLambdaVPCAccessExecutionRole is needed by Lambda
+{{< figure src="images/uploads/lambda-default.png" width="250" height="250" >}}
+
+{{< figure src="images/uploads/lambda-vpc.png" width="250" height="250" class="alignright">}}
+
+* By default, your Lambda function is launched **outside** of your own ```VPC``` (in an AWS-owned VPC)
+* Therefore it cannot access resources in your VPC (RDS, ElastiCache, internal ELB…)
+* In order to give access for ```Lambda``` to your ```VPC``` resources, you need to associate the Lambda function to the VPC, specify the Subnets and the Security Groups. 
+* Lambda will create an ```ENI``` (Elastic Network Interface) in your subnets.
+* Lambda would need ```AWSLambdaVPCAccessExecutionRole``` to be able to create ENI
 
 ### Lambda in VPC – Internet Access
 
-* A Lambda function in your VPC does not have internet access
-* Deploying a Lambda function in a public subnet does not give it internet access or a public IP
-* Deploying a Lambda function in a private subnet gives it internet access if you have a NAT Gateway / Instance
-* You can use VPC endpoints to privately access AWS services without a NAT
-> Note: Lambda - CloudWatch Logs works even without endpoint or NAT Gateway
+* A Lambda function in your VPC does not have **internet** access
+* Deploying a Lambda function in a **public** subnet does not give it internet access or a public IP
+* Deploying a Lambda function in a private subnet gives it internet access if you have a NAT Gateway / NAT Instance
+* You can use ```VPC endpoints``` to **privately** access AWS services without a NAT (say a ```DynamoDB``` table)
+> Note: Lambda - CloudWatch Logs works even **without** VPC endpoint or NAT Gateway
 
-{{< figure src="images/uploads/lambda-vpc-internet.png" width="350" height="350" >}}
+{{< figure src="images/uploads/lambda-vpc-internet.png" width="500" height="500" >}}
+
+
+{{< figure src="images/uploads/lambda-cft-inline.png" class="alignright">}}
+### Lambda and CloudFormation
+
+* You could define your Lambda function in a CloudFormation template **inline**. Functions have to be simple. (Cannot include function **dependencies** with inline functions)
+* Use the ```Code.ZipFile``` property
+* You could also store the Lambda function as a zip in ```S3``` and refer the S3 zip location in the CloudFormation code:
+  * S3Bucket: <Bucket-Name>
+  * S3Key: <full path to zip>
+  * S3ObjectVersion: <Object-Version> (if versioned bucket)
+* If you update the code in S3, but don’t update S3Bucket, S3Key or S3ObjectVersion, CloudFormation won’t update your function
+{{< figure src="images/uploads/lambda-cft-s3.png" width="500" height="500">}}
+
+
+
 
