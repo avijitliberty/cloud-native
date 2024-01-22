@@ -18,9 +18,9 @@ AWS infrastructure via CloudFormation
 
 ![AWS-CloudFormation](/images/uploads/cloudformation.png)
 
-AWS CloudFormation is an AWS service which allows us to declaratively describe and provision almost all of the AWS services using the JSON or YAML format. It is defined as an “Infrastructure as a code”. That allows us to spend less time on managing infrastructure and more time spending on our application logic.
+AWS CloudFormation is an AWS service which allows us to **declaratively** describe and provision almost all of the AWS services using the ```JSON``` or ```YAML``` format. It is defined as an “Infrastructure as a code”. That allows us to spend less time on managing infrastructure and more time spending on our application logic.
 
-In AWS CloudFormation we will work with the CloudFormation template and using the template we are creating a stack. The template is written either by using JSON or YAML and it describes what AWS services are been provisioned into the stack. 
+In AWS CloudFormation we will work with the CloudFormation template and using the template we are creating a **stack**. The template describes what AWS services are been provisioned into the stack. 
 
 ### Template Anatomy
 
@@ -63,9 +63,9 @@ For an example elastic IP or a load balancer DNS.
 | * NoEcho                  | &emsp;&emsp;* AWS::SSM::Parameter::Value                |
 |                           | &emsp;&emsp;* AWS::SSM::Parameter::Value\<List\<String\>\>  |
 
-### Mappings
-
 {{< figure src="images/uploads/cloudformation-mappings.png" class="alignright">}}
+
+### Mappings
 
 * Mappings section matches a key to a corresponding set of named values. 
 * For example, if we want to set values based on a region, we can create a mapping that uses region name as a key and contains the values we want to specify for each region
@@ -96,14 +96,14 @@ Mappings:
 * Conditions section contains statements that define the circumstances under which entities are created or configured.
   * **Example: 1** - We can create a condition and then associate it with a resource or output so that AWS CloudFormation only creates the resource or output if the condition is true.
   * **Example: 2** - We can associate the condition with a property so that AWS CloudFormation only sets the property to a specific value if the condition is true, if the condition is false, AWS CloudFormation sets the property to a different value that we specify.
-* We will use conditions, when we want to re-use the template in different contexts like dev and prod environments. 
+* We will use conditions, when we want to **re-use** the template in different contexts like ```dev``` and ```prod``` environments. 
 * Conditions are evaluated based on predefined Psuedo parameters or input parameter values that we specify when we create or update stack. 
 * Within each condition we can reference the other condition. 
 * We can associate these conditions in three places:
   * Resources
   * Resource Properties
   * Outputs 
-* At stack creation or stack update, AWS CloudFormation evaluates all conditions in our template. During stack update, Resources that are now associated with a false condition are deleted. 
+* At stack creation or stack update, AWS CloudFormation evaluates all conditions in our template. During stack update, Resources that are now associated with a **false** condition are **deleted**. 
 * We can use the below listed intrinsic functions to define conditions in cloud formation template. 
   * Fn::And
   * Fn::Equals
@@ -152,13 +152,10 @@ Resources:
 ### EC2 User Data
 
 * We can use UserData in CloudFormation template for ec2. 
-* We need to use a intrinsic function Fn::Base64 with UserData in CFN templates. This function 
-returns the Base64 representation of input string. It passes encoded data to ec2 Instance. 
-* YAML Pipe (|): Any indented text that follows should be interpreted as a multi-line scalar value 
-which means value should be interpreted literally in such a way that preserves newlines.
-* UserData Cons:
-  * By default, user data scripts and cloud-init directives run only during the boot cycle when 
-  we first launch an instance.
+* We need to use a intrinsic function ```Fn::Base64``` with UserData in CFN templates. This function returns the Base64 representation of input string. It passes encoded data to ec2 Instance. 
+* YAML **Pipe** (|): Any indented text that follows should be interpreted as a multi-line scalar value which means value should be interpreted literally in such a way that preserves newlines.
+* UserData **Cons**:
+  * By default, user data scripts and cloud-init directives run only during the boot cycle when we first launch an instance.
   * We can update our configuration to ensure that our user data scripts and cloud-init directives run every time we restart our instance. (Reboot of server required)
 
 ```yml
@@ -185,16 +182,15 @@ which means value should be interpreted literally in such a way that preserves n
 ### Outputs
 
 * Outputs section declares output values that we can 
-  * Import in to other stacks (to create cross-stack references)
-  * When using Nested stacks, outputs of a nested stack are used in Root Stack. 
-* We can declare maximum of 60 outputs in a cfn template. 
-* Export (Optional)
+  * Import in to other stacks (to create **cross-stack** references)
+  * When using ```Nested``` stacks, outputs of a nested stack are used in ```Root``` Stack. 
+* We can declare maximum of **60** outputs in a cfn template. 
+* **Export** (Optional)
   * Exports contain resource output used for cross-stack reference. 
-  * For each AWS account, Export name must be unique with in the region. As it 
+  * For each AWS account, **export name** must be **unique** with in the region. As it 
   should be unique we can use the export name as “AWS::StackName”-ExportName
   * We can’t create cross-stack references across regions.
-  * We can use the intrinsic function Fn::ImportValue to import values that have been 
-  exported within the same region.  
+  * We can use the intrinsic function ```Fn::ImportValue``` to import values that have been exported within the same region.  
   * For outputs, the value of the Name property of an Export can't use Ref or GetAtt
   functions that depend on a resource. 
   * We can’t delete a stack if another stack references one of its outputs. 
@@ -205,8 +201,7 @@ which means value should be interpreted literally in such a way that preserves n
 Outputs:
   JDBCConnectionString:
     Description: JDBC connection string for the database
-    Value: !Join ['', ['jdbc:mysql://', !GetAtt [RDSInstance, Endpoint.Address], ':', !GetAtt [
-          RDSInstance, Endpoint.Port], /, !Ref 'DBName']]
+    Value: !Join ['', ['jdbc:mysql://', !GetAtt [RDSInstance, Endpoint.Address], ':', !GetAtt [RDSInstance, Endpoint.Port], /, !Ref 'DBName']]
   ExternalUrl:
     Description: The url of the external load balancer
     Value: !Join ['', ['http://', !GetAtt 'LoadBalancer.DNSName','/context-root/']]
@@ -256,33 +251,148 @@ Following are a 🧠 list of most used functions:
 
 ###### !FindInMap
 
-* The intrinsic function ```FindInMap``` returns the value corresponding to keys in a two-level map that is declared in Mappings section.
+* The intrinsic function ```FindInMap``` returns the value corresponding to keys in a **two-level** map that is declared in Mappings section.
 * Parameters
   * Map Name
   * Top Level Key
   * Second Level Key
 
-###### !Equals
+```yml
+Mappings:     
+  MyRegionMap:
+    us-east-2:
+      HVM64: ami-0cd3dfa4e37921605
+    us-west-1:
+      HVM64: ami-0ec6517f6edbf8044
+    ...
+Resources:
+  MyVMInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap
+        - MyRegionMap
+        - !Ref 'AWS::Region'
+        - HVM64
+```
 
-###### !And
+###### Conditions
 
-###### !Or
+* We can use the below listed intrinsic functions to define conditions in cloud formation template.
 
-###### !If
+  * !Equals
+  * !And
+  * !Or
+  * !If
+  * !Not
 
-###### !Not
+```yml
+Conditions:
+  CreateEIPForProd: !Equals [!Ref EnvironmentName, prod]
+  CreateProdSecurityGroup: !Equals [!Ref EnvironmentName, prod]
+  CreateDevSecurityGroup: !Not [{Condition: CreateProdSecurityGroup}]
+```
 
 ###### !GetAtt
 
+* **Attributes** are attached to any resources you create.
+* To know the attributes of your resources, the best place to look at is the documentation.
+* For example: the ```AZ``` of an EC2 machine!
+
+```yml
+Resources:
+  MyVMInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+    ...
+Outputs:
+  MyInstanceAvailabilityZone:
+    Description: Instance Availability Zone
+    Value: !GetAtt MyVMInstance.AvailabilityZone 
+```
+
 ###### !GetAZs
+
+* Returns an array that lists ```Availability Zones``` for a specified ```Region``` in alphabetical order. 
+
+```yml
+Subnet0: 
+  Type: "AWS::EC2::Subnet"
+  Properties: 
+    VpcId: !Ref VPC
+    AvailabilityZone: !Select 
+      - 0
+      - Fn::GetAZs: !Ref 'AWS::Region'
+```
 
 ###### !Sub
 
+* Fn::Sub, or ```!Sub``` as a shorthand, is used to substitute variables from a
+text. 
+* You can combine Fn::Sub with **References** or AWS **Pseudo Parameters**
+* String must contain ```${VariableName}``` and will substitute them
+
+```yml
+Outputs:
+  AppURL:
+    Description: Tomcat App Access URL
+    Value: !Sub 'http://${MyVMInstance.PublicDnsName}:8080/index.html'
+```
+
 ###### !ImportValue
+
+* Import values that are exported in other templates
+
+```yml
+# Stack-1
+Outputs:
+  MyDevGlobalSecurityGroup:
+    Description: My Dev SG
+    Value: !Ref MyDevGlobalSecurityGroup
+    Export:
+      Name: MyDevSSHGlobalSG  
+    ...
+# Stack-2
+Resources:
+  MyVMInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ...
+      SecurityGroups: 
+        - !ImportValue MyDevSSHGlobalSG
+```
 
 ###### !Join
 
+* Join values with a delimiter
+
+```yml
+Outputs:
+  JDBCConnectionString:
+    Description: JDBC connection string for the database
+    Value: !Join ['', ['jdbc:mysql://', !GetAtt [RDSInstance, Endpoint.Address], ':', !GetAtt [RDSInstance, Endpoint.Port], /, !Ref 'DBName']]
+  ExternalUrl:
+    Description: The url of the external load balancer
+    Value: !Join ['', ['http://', !GetAtt 'LoadBalancer.DNSName','/context-root/']]
+```
+
 ###### !Base64
+
+* Returns the Base64 representation of the input string. 
+* This function is typically used to pass encoded data to Amazon EC2 instances by way of the ```UserData``` property.
+
+```YAML
+SpringBootAwsStarterLauncher:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+    ...  
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash -xe
+            echo "Starting springboot-aws-starter"
+            ...
+```
+
 
 ###### !Select 
 
@@ -339,7 +449,6 @@ We have three types of metadata keys which are listed below:
 * We use ```Fn::GetAtt``` function with nested stacks logical name and the name of the output value in nested stack
 
 ```yml
-
   VPCStack:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -349,3 +458,9 @@ We have three types of metadata keys which are listed below:
   
 ```
 
+### CloudFormation Rollbacks
+
+* Stack **Creation** Fails:
+  * Default: Everything rollsback (gets **deleted**). We can look at the log. There is an option to disable rollback and troubleshoot what happened.
+* Stack **Update** Fails:
+  * The stack automatically rolls back to the previous known working state. Ability to see in the log what happened and error messages
