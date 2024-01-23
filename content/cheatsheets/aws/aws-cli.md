@@ -142,7 +142,7 @@ Some AWS CLI commands (such as EC2) can become expensive if they succeed, say if
   ```
 ## Credentials Chain
 
-* The CLI will look for credentials in this order:
+* The CLI will look👀 for credentials in this order:
 
   1. Command line options – --region, --output, and --profile
   2. Environment variables – AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,

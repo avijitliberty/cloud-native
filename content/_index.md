@@ -9,7 +9,7 @@ sections:
     content:
       slides:
         - title: 👋Welcome <br> to <br> **cloud-native**
-          content: Take a look at what we're working on...
+          content: Take a look👀 at what we're working on...
           align: center
           background:
             image:

@@ -57,21 +57,6 @@ CICD in AWS is composed of the following services. Most enterprises use most or 
 
 ![CodeCommit Vs GitHub](/images/uploads/codecommit-vs-github.png)
 
-### CodePipeline
-
--  Visual Workflow to orchestrate your CICD
--  **Source** – CodeCommit, ECR, S3, Bitbucket, GitHub
--  **Build** – CodeBuild, Jenkins, CloudBees, TeamCity
--  **Test** – CodeBuild, AWS Device Farm, 3rd party tools...
--  **Deploy** – CodeDeploy, Elastic Beanstalk, CloudFormation, ECS, S3...
--  **Invoke** – Lambda, Step Functions
--  Consists of stages:
-    -  Each stage can have sequential actions and/or parallel actions
-    -  Example: Build :arrow_right: Test :arrow_right: Deploy :arrow_right: Load Testing :arrow_right: …
-    -  Manual approval can be defined at any stage
-
-![Codepipeline – Artifacts](/images/uploads/codepipeline-artifacts.png)
-
 ### CodeBuild
 
 * A fully managed continuous integration (CI) service
@@ -151,3 +136,20 @@ CICD in AWS is composed of the following services. Most enterprises use most or 
   * JUnit XML, NUnit XML, NUnit3 XML
   * Cucumber JSON, TestNG XML, Visual Studio TRX
 * Create a test report and add a Report Group name in ```buildspec.yml``` file with information about your tests
+
+### CodeDeploy
+
+### CodePipeline
+
+-  Visual Workflow to orchestrate your CICD
+-  **Source** – CodeCommit, ECR, S3, Bitbucket, GitHub
+-  **Build** – CodeBuild, Jenkins, CloudBees, TeamCity
+-  **Test** – CodeBuild, AWS Device Farm, 3rd party tools...
+-  **Deploy** – CodeDeploy, Elastic Beanstalk, CloudFormation, ECS, S3...
+-  **Invoke** – Lambda, Step Functions
+-  Consists of stages:
+    -  Each stage can have sequential actions and/or parallel actions
+    -  Example: Build :arrow_right: Test :arrow_right: Deploy :arrow_right: Load Testing :arrow_right: …
+    -  Manual approval can be defined at any stage
+
+![Codepipeline – Artifacts](/images/uploads/codepipeline-artifacts.png)

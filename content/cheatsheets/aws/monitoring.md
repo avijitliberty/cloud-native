@@ -372,7 +372,7 @@ from inside the instance as a custom metric)
   * CLI
   * AWS Services
 * Can put logs from CloudTrail into CloudWatch Logs
-* If a resource is deleted in AWS, look into CloudTrail first!
+* If a resource is deleted in AWS, look👀 into CloudTrail first!
 
 ##  CloudWatch vs X-Ray vs CloudTrail
 

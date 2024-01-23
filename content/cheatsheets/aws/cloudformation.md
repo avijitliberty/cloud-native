@@ -447,20 +447,174 @@ We have three types of metadata keys which are listed below:
 * The ```AWS::CloudFormation::Stack``` type nests a stack as a resource in a top-level template. 
 * We can add output values from a nested stack within the root stack.
 * We use ```Fn::GetAtt``` function with nested stacks logical name and the name of the output value in nested stack
+* With nested stacks, you deploy and manage all resources from a single stack i.e the **root** stack. 
+* You can use outputs from one stack in the nested stack group as inputs to another stack in the group. This differs from exporting values.
+* If you want to isolate information sharing to within a nested stack group, you use nested stacks. To share information with other 
+stacks (not just within the group of nested stacks), export values.
+
+![CloudFormation-Nested](/images/uploads/cloudformation-nested-stack.png)
 
 ```yml
+# Root Stack
+Parameters:
+  ...
+  VpcBlock:
+    Type: String
+    Default: 10.0.0.0/16
+    Description: VPC CIDR Tange
+      
+  Subnet01Block:
+    Type: String
+    Default: 10.0.1.0/24
+    Description: CidrBlock for Subnet 01 within the VPC.    
+
+Resources:
+
   VPCStack:
     Type: AWS::CloudFormation::Stack
     Properties:
+      TemplateURL: https://s3.us-east-2.amazonaws.com/nestedbucket/nestedstacks/NestedStack-VPC.yml 
+      Parameters:  
+        VpcBlock: !Ref VpcBlock
+        Subnet01Block: !Ref Subnet01Block 
+      TimeoutInMinutes: 5            
+
+  SecurityGroupStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.us-east-2.amazonaws.com/nestedbucket/nestedstacks/NestedStack-SG.yml
+      Parameters:
+        VPCId: !GetAtt VPCStack.Outputs.VpcId
+      TimeoutInMinutes: 5        
+
+  MyVMInstance:
+    Type: AWS::EC2::Instance
+    Properties:
       ...
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          SubnetId: !GetAtt VPCStack.Outputs.Subnet01Id
+          GroupSet:
+            - !GetAtt SecurityGroupStack.Outputs.DevSGGroupId  
+          ...
+# Nested VPC Stack
+
+Parameters:
+  VpcBlock:
+    Type: String
+    Default: 10.0.0.0/16
+    Description: VPC CIDR Tange
+      
+  Subnet01Block:
+    Type: String
+    Default: 10.0.1.0/24
+    Description: CidrBlock for Subnet 01 within the VPC.        
+              
+Resources:
+  myVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      ...  
+
+Outputs:
+  Subnet01Id:
+    Description: Subnet 01 Id
+    Value: !Ref Subnet01
+
+  VpcId:
+    Description: Vpc Id
+    Value: !Ref myVPC      
+
+# Nested SG Stack
+
+Parameters:
+  VPCId: 
+    Description: Create security group in this respective VPC
+    Type: AWS::EC2::VPC::Id
+
+Resources:
+  DevSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
       ...
-  VPCId: !GetAtt VPCStack.Outputs.VpcId
+      VpcId: !Ref VPCId
+
+Outputs:
+  DevSGGroupId:
+    Description: Dev Security Group
+    Value: !Ref DevSecurityGroup
   
 ```
 
-### CloudFormation Rollbacks
+### Rollbacks
 
 * Stack **Creation** Fails:
   * Default: Everything rollsback (gets **deleted**). We can look at the log. There is an option to disable rollback and troubleshoot what happened.
 * Stack **Update** Fails:
   * The stack automatically rolls back to the previous known working state. Ability to see in the log what happened and error messages
+
+### Drift
+
+* CloudFormation doesn’t protect you against **manual** configuration changes after the Stack is created.
+* To detect if our resources have changed, we can use CloudFormation **drift** feature.
+* Not all resources are supported yet: 
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift-resource-list.html
+
+### Stack Policy
+
+* By default, anyone with stack update permissions can update all of the stack resources, and during the update process some resources might require downtime or even they get replaced.
+* Stack policies prevents **accidental/unintentional** updates to Stack Resources.
+* Stack Policy applies only during stack **updates**. Its doesn't provide access controls like AWS ```IAM``` Policies.
+* We need to use Stack Policy as a **fail-safe** mechanism to prevent accidental updates.
+* Stack policies are written in JSON.
+* Stack Policy have the following elements:
+  * **Effect**: Allow / Deny - Determines the action we specify should be allowed are denied.
+  * **Action**: Specifies the update actions that are denied or allowed.
+    * Update: Modify
+    * Update: Replace
+    * Update: Delete
+    * Update :*
+  * **Principal**: Principal element specifies the entity that the policy applies to. 
+  * **Resource**: Specifies the logical id of the resource.
+  * **ResouceTypes**: Generic type for that respective type of resources like ["AWS::EC2::SecurityGroup"]. We can even use wild card with resource types like ["AWS::EC2::*"]
+  * **Condition**: Specifies the conditional where the policy applies to. 
+
+{{% callout note %}}
+
+If a stack policy includes **overlapping** statements (both allowing and denying on a resource) a ```Deny``` statement always overrides an ```Allow``` statement. 
+
+{{% /callout %}}
+
+```json
+{
+	"Statement": [
+		{
+			"Effect": "Allow",
+			"Action": "Update:*",
+			"Principal": "*",
+			"Resource": "*"
+		},
+		{
+			"Effect": "Deny",
+			"Action": "Update:*",
+			"Principal": "*",
+			"Resource": "LogicalResourceId/MyRDSInstance"
+		},
+		{
+			"Effect": "Deny",
+			"Action": "Update:*",
+			"Principal": "*",
+			"Resource": "*",
+			"Condition": {
+				"StringEquals": {
+					"ResourceType": [
+						"AWS::EC2::SecurityGroup"
+					]
+				}
+			}
+		}
+	]
+}
+
+```

@@ -95,7 +95,7 @@ There are three main ways to **authorize** API calls to your API Gateway endpoin
 
 ###### Lambda Authorizers
 
-  * If you are using an **OATH** strategy as an organization, you may want to look at Token authorization with a **Lambda Authorizer**.
+  * If you are using an **OATH** strategy as an organization, you may want to look👀 at Token authorization with a **Lambda Authorizer**.
   * A Lambda authorizer is simply a Lambda function that you can write to perform any custom authorization that you need.
   * There are two types of Lambda Authorizers: ```Token``` and ```Request```.
   * When a client calls your API, API Gateway verifies whether a Lambda authorizer is configured for the API method.

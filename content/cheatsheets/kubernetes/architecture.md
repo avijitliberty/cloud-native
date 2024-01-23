@@ -44,7 +44,7 @@ Nodes in a Kubernetes cluster may be physical, or virtual. There are two types o
 
 ![k8s-cluster](/images/uploads/k8s-cluster.png)
 
-Next we will look under the hood at a high level.
+Next we will look👀 under the hood at a high level.
 
 ---
 

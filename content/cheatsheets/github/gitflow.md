@@ -686,7 +686,7 @@ Finally clean up the **hotfix** branch like so:
 Based on the Gitflow branching strategy when a release (EC or regular) goes to production the release branch it came from should be merged to master and develop with a tag added to the head commit of the release branch.
 
 > Before creating the release branch, it's a good idea to check Github and make sure the release branch to
-be merged to master isn't ahead of develop at all as this may cause conflicts when merging. It shouldn't be since construct happens after the production release, but as a sanity check it's a good idea to look first.
+be merged to master isn't ahead of develop at all as this may cause conflicts when merging. It shouldn't be since construct happens after the production release, but as a sanity check it's a good idea to look👀 first.
 
 ### Manual
 

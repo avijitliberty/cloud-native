@@ -18,7 +18,7 @@ AWS Cloud Development Kit (CDK)
 
 CDK acts as an abstraction on top of Cloud Formation Templates that allows developers to use actual declarative languages (Java, JavaScript, Python, TypeScript and .NET are currently supported) to define their cloud infrastructure. The CDK stack file is translated to Cloud Formation which is then used to create your stack. This way, we have a real ```Infrastructure As Code``` solution and don’t have to handle CloudFormation files in YAML or JSON anymore. 
 
-If you have coded a :exploding_head: CFT template ever which deployed in Prod, you would :heart: CDK
+If you consider yourself a **programmer**👨‍💻 and not a **ninja**🥷 of ```YAML``` and ```JSON``` files, you’ll :heart: to learn about the AWS Cloud Development Kit (CDK).
 
 ![AWS CDK Overview](/images/uploads/aws-cdk-overview.png)
 
@@ -64,7 +64,7 @@ npm install -g aws-cdk@X.YY.Z      # install specific version
 ```
 cdk init app --language=typescript
 ```
-If we look in the generated code we find these 2 classes:
+If we look👀 in the generated code we find these 2 classes:
 - **cdk-workshop.ts**
 ```js
 #!/usr/bin/env node
@@ -113,7 +113,7 @@ These resources include an **S3** bucket for storing large Lambda functions or o
 The process of provisioning these initial resources is called ```bootstrapping```. 
 
 ```bash
-cdk bootstrap
+cdk bootstrap aws://YOUR-ACCOUNT-NUMBER/YOUR-REGION --profile YOUR-PROFILE
 ```
 
 ###### Deploying the CDK App
