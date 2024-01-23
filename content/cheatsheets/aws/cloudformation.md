@@ -442,15 +442,63 @@ We have three types of metadata keys which are listed below:
 
 ### Helper Scripts
 
+* CloudFormation provides the following Python helper scripts that we can use to install software and start services on Amazon EC2 that we create as part of stack.
+
+  {{< figure src="images/uploads/cloudformation-metadata-structure.png" width="300" height="1000" class="alignright">}}
+
+  * cfn-init
+  * cfn-signal
+  * cfn-get-metadata
+  * cfn-hup
+
+* Type ```AWS::CloudFormation::Init``` will be used to include metadata section on an ec2 instance for ```cfn-init``` helper script.
+* Configuration is separated into sections.
+* Metadata is organized in to **config** keys, which we can even group into **configsets**. 
+* The ```cfn-init``` helper script processes the configuration sections in the order specified in syntax section.
+
+* We can use ```packages``` key to download and install pre-packaged applications.
+* We can use ```groups``` to create Linux/Unix groups and assign to group id’s.
+* We can use the ```users``` key to create Linux/Unix users in EC2 Instance.
+* We can use the ```sources``` key to download an archive file and unpack it in a target directory on EC2 Instance.
+* We can use the ```files``` key to create files on EC2 Instance. The content can be either inline in the template or the content can be pulled from a URL.
+* We can use ```commands``` key to execute commands on EC2 Instance.
+* We can use ```services``` key to define which services should be enabled or disabled when the instance is launched. On Linux systems this key is supported by using sysvinit. On Windows systems, it is supported by using Windows Service Manager. Services key also allows us to specify dependencies on sources, packages and files so that if a restart is needed due to files being installed, cfn-init will take care of the service restart. 
+* Supported Keys:
+  * ensureRunning
+  * enabled
+  * files
+  * sources
+  * packages
+  * commands 
+
+* UserData
+* Helper Scripts are updated periodically.
+* We need to ensure that the below listed command is included in UserData of our template before we call the helper scripts to ensure that our launched instances get the latest helper scripts.
+* The cfn-init helper script reads template metadata from the AWS::CloudFormation::Init key and acts accordingly to:
+  * Fetch and parse metadata from AWS CloudFormation
+  * Install packages
+  * Write files to disk
+  * Enable/disable and start/stop services
+* The cfn-signal helper script signals AWS CloudFormation to indicate whether Amazon EC2 instances have been successfully created or updated. If we install and configure software applications on instances, we can signal AWS CloudFormation when those software applications are ready. We can use the cfn-signal script in conjunction with a CreationPolicy.
+* Use the CreationPolicy attribute when you want to wait on resource configuration actions before stack creation proceeds.
+* cfn-hup helper is a daemon that detects changes in resource metadata and runs user-specified actions when a change is detected.
+* cfn-hup.conf file stores the name of the stack and the AWS credentials that the cfn-hup daemon targets.
+* User actions that cfn-hup daemon calls periodically are defined in hooks.conf.
+
+
+
+
 ### Nested Stacks
 
 * The ```AWS::CloudFormation::Stack``` type nests a stack as a resource in a top-level template. 
-* We can add output values from a nested stack within the root stack.
+* The nested stacks have to be stored in a ```versioned``` S3 bucket which the root stack can access.
+* We can add **output** values from a nested stack within the root stack.
 * We use ```Fn::GetAtt``` function with nested stacks logical name and the name of the output value in nested stack
-* With nested stacks, you deploy and manage all resources from a single stack i.e the **root** stack. 
-* You can use outputs from one stack in the nested stack group as inputs to another stack in the group. This differs from exporting values.
-* If you want to isolate information sharing to within a nested stack group, you use nested stacks. To share information with other 
-stacks (not just within the group of nested stacks), export values.
+* With nested stacks, you deploy and manage all resources from a single stack i.e the **root** stack. **Never** ```update/delete``` the nested stack directly.
+  * If you have to ```delete```, then delete the ```root``` stack.
+  * If you have to ```update```, then update the ```nested``` stack, upload to versioned S3 bucket. Then update the ```root``` stack to propogate the changes. 
+* You can use outputs from one stack in the nested stack group as inputs to another stack in the group. This differs from ```exporting``` values.
+* If you want to isolate information sharing to within a stack group, you use **nested** stacks. To share information with other stacks (not just within the group of nested stacks), you would **export** values.
 
 ![CloudFormation-Nested](/images/uploads/cloudformation-nested-stack.png)
 
@@ -563,7 +611,7 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-d
 
 ### Stack Policy
 
-* By default, anyone with stack update permissions can update all of the stack resources, and during the update process some resources might require downtime or even they get replaced.
+* By default, anyone with stack update permissions can update all of the stack resources, and during the update process some resources might require **downtime** or even they get **replaced**😬 (that could be 💥in **Prod**)
 * Stack policies prevents **accidental/unintentional** updates to Stack Resources.
 * Stack Policy applies only during stack **updates**. Its doesn't provide access controls like AWS ```IAM``` Policies.
 * We need to use Stack Policy as a **fail-safe** mechanism to prevent accidental updates.
@@ -618,3 +666,37 @@ If a stack policy includes **overlapping** statements (both allowing and denying
 }
 
 ```
+* Finally if you **have** to update a resource protected by an ```Update``` policy, you could use an updated ```Update``` policy for that **particular** change.
+That policy would be temporary and would apply to that one change only.
+
+### DeletionPolicy 
+
+* You can put a **DeletionPolicy** on any resource to control what happens when the CloudFormation template is **deleted**
+* DeletionPolicy=**Retain**:
+  * Specify on resources to preserve / backup in case of CloudFormation deletes
+* DeletionPolicy=**Snapshot**:
+  * EBS Volume, ElastiCache Cluster, ElastiCache ReplicationGroup, RDS DBInstance, RDS DBCluster, Redshift Cluster
+* DeletePolicy=**Delete**: **default** behavior for most resouces.
+
+```yml
+
+Resources:
+  MySG:
+    Type: AWS::EC2::SecurityGroup
+    DeletionPolicy: Retain
+    Properties:
+      ...
+
+  MyEBS:
+    Type: AWS::EC2::Volume
+    DeletionPolicy: Snapshot
+    Properties:
+      ...
+```
+
+{{% callout note %}}
+
+* For ```AWS::RDS::DBCluster``` resources, the default policy is **Snapshot**
+* To delete an ```S3``` bucket, you need to first **empty** the bucket of its contents
+
+{{% /callout %}}
