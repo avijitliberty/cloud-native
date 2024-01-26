@@ -729,11 +729,11 @@ CloudFormation Templates require three elements to utilize Lambda Functions:
 
 Here's some scenarios
 
-- ❓If we hardcode AMI Id's in CloudFormation mapping, and when AWS rolls out new AMI's our template would become **stale**:sneezing_face: 
+- ❓If we hardcode AMI Id's in CloudFormation mapping, and when AWS rolls out new AMI's? Our template would become **stale**:sneezing_face: 
   - 💡Lambda Function which retrieves AMI ID for instance type/region in real time. Use returned AMI to provision EC2:
     [Custom-Resources-Lambda-Lookup-Amiids](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/walkthrough-custom-resources-lambda-lookup-amiids.html)
 
-- ❓If we want to delete a stack with a **non-empty** s3 bucket created via cloudformation, the bucket needs to be emptied󠀠󠀠 first.
+- ❓How would we delete a stack with a **non-empty** s3 bucket created via cloudformation, the bucket needs to be emptied󠀠󠀠 first!
   - 💡Create a lambda function to clean up your bucket first from your CloudFormation stack 
 
 - ❓If we create an IAM user with a custom password via CloudFormation, we need to make sure the password is correct!
@@ -741,8 +741,8 @@ Here's some scenarios
 
 ### SSM Parameters
 
-* Reference parameters in Systems Manager Parameter Store
-* Specify SSM parameter key as the value in CloudFormation template.
+* Reference parameters in ```Systems Manager``` Parameter Store
+* Specify SSM parameter **key** as the value in CloudFormation template.
 * CloudFormation always fetches the latest value (you can’t specify parameter version)
 * Validation done on SSM parameter keys, but not values
 * Supported SSM Parameter Types:
@@ -752,6 +752,7 @@ Here's some scenarios
   * AWS::SSM::Parameter::Value<CommaDelimitedList>
   * AWS::SSM::Parameter::Value<AWS-Specific Parameter>
   * AWS::SSM::Parameter::Value<List<AWS-Specific Parameter>>
+
 ```yml
 Parameters:
   InstanceType:
@@ -773,8 +774,9 @@ Resources:
 
 ### Dynamic References
 
-* Reference values stored in SSM Parameter Store of type String and StringList
+* Reference values stored in ```SSM``` Parameter Store of type String and StringList
 * If no version specified, CloudFormation uses the latest version
+* Unlike SSM Parameters, ```Dynamic``` references are used directly on the Resources.
 * Doesn’t support public SSM parameters (e.g., Amazon Linux 2 AMI)
 
 ```yml
