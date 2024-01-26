@@ -11,6 +11,11 @@ name = "Coffee"
   menu_text_active = "#db8b43"
   menu_title = "#5C4033"
 
+  # Links
+  link = "#5c333b"
+  link_hover = "#4c2a30"
+  link_decoration = "underline"
+
   # Backgrounds
   background = "#fff"
   home_section_odd = "hsla(16, 24%, 85%, 1)"

@@ -393,7 +393,6 @@ SpringBootAwsStarterLauncher:
             ...
 ```
 
-
 ###### !Select 
 
 The intrinsic function ```!Select``` returns a single object from a list of objects by index.
@@ -442,7 +441,9 @@ We have three types of metadata keys which are listed below:
 
 ### Helper Scripts
 
-* CloudFormation provides the following Python helper scripts that we can use to install software and start services on Amazon EC2 that we create as part of stack.
+* By default, ```UserData``` scripts run only during the boot cycle when we first launch an instance. We cannot **update/evolve** the state of the EC2 instance without terminating it and creating a new one. Also there's no way of knowing that our EC2 user-data script completed successfully
+
+* To solve this problem CloudFormation provides the following Python helper scripts that we can use to install software and start services on Amazon EC2 that we create as part of stack.
 
   {{< figure src="images/uploads/cloudformation-metadata-structure.png" width="300" height="1000" class="alignright">}}
 
@@ -451,15 +452,18 @@ We have three types of metadata keys which are listed below:
   * cfn-get-metadata
   * cfn-hup
 
-* Type ```AWS::CloudFormation::Init``` will be used to include metadata section on an ec2 instance for ```cfn-init``` helper script.
+* Type ```AWS::CloudFormation::Init``` will be used in the metadata section on an ec2 instance for ```cfn-init``` helper script.
 * Configuration is separated into sections.
 * Metadata is organized in to **config** keys, which we can even group into **configsets**. 
 * The ```cfn-init``` helper script processes the configuration sections in the order specified in syntax section.
 
-* We can use ```packages``` key to download and install pre-packaged applications.
+* We can use ```packages``` key to download and install pre-packaged software.
 * We can use ```groups``` to create Linux/Unix groups and assign to group id’s.
 * We can use the ```users``` key to create Linux/Unix users in EC2 Instance.
 * We can use the ```sources``` key to download an archive file and unpack it in a target directory on EC2 Instance.
+
+![CloudFormation-cfn-init](/images/uploads/cloudformation-cfn-init-1.png)
+
 * We can use the ```files``` key to create files on EC2 Instance. The content can be either inline in the template or the content can be pulled from a URL.
 * We can use ```commands``` key to execute commands on EC2 Instance.
 * We can use ```services``` key to define which services should be enabled or disabled when the instance is launched. On Linux systems this key is supported by using sysvinit. On Windows systems, it is supported by using Windows Service Manager. Services key also allows us to specify dependencies on sources, packages and files so that if a restart is needed due to files being installed, cfn-init will take care of the service restart. 
@@ -471,6 +475,8 @@ We have three types of metadata keys which are listed below:
   * packages
   * commands 
 
+![CloudFormation-cfn-init](/images/uploads/cloudformation-cfn-init-2.png)
+
 * UserData
 * Helper Scripts are updated periodically.
 * We need to ensure that the below listed command is included in UserData of our template before we call the helper scripts to ensure that our launched instances get the latest helper scripts.
@@ -479,14 +485,13 @@ We have three types of metadata keys which are listed below:
   * Install packages
   * Write files to disk
   * Enable/disable and start/stop services
-* The cfn-signal helper script signals AWS CloudFormation to indicate whether Amazon EC2 instances have been successfully created or updated. If we install and configure software applications on instances, we can signal AWS CloudFormation when those software applications are ready. We can use the cfn-signal script in conjunction with a CreationPolicy.
-* Use the CreationPolicy attribute when you want to wait on resource configuration actions before stack creation proceeds.
-* cfn-hup helper is a daemon that detects changes in resource metadata and runs user-specified actions when a change is detected.
+* The ```cfn-signal``` helper script signals AWS CloudFormation to indicate whether Amazon EC2 instances have been successfully created or updated. If we install and configure software applications on instances, we can signal AWS CloudFormation when those software applications are ready. We can use the cfn-signal script in conjunction with a ```CreationPolicy```.
+* The **CreationPolicy** attribute is a CloudFormation resource attribute that you can define on your EC2 instance resources. It pauses the resource creation for a specific time you define in your template and waits for a **success** signal to continue. If this success signal does not come within this period or a failure signal is received, it fails the resource creation, and the stack creation **rollsback**.
+* ```cfn-hup``` helper is a **daemon** that detects changes in resource metadata and runs user-specified actions when a change is detected.
 * cfn-hup.conf file stores the name of the stack and the AWS credentials that the cfn-hup daemon targets.
 * User actions that cfn-hup daemon calls periodically are defined in hooks.conf.
 
-
-
+![CloudFormation-cfn-init](/images/uploads/cloudformation-cfn-init-3.png)
 
 ### Nested Stacks
 
@@ -700,3 +705,110 @@ Resources:
 * To delete an ```S3``` bucket, you need to first **empty** the bucket of its contents
 
 {{% /callout %}}
+
+### Custom Resources
+
+**Custom resources** enable you to write custom provisioning logic in templates that AWS CloudFormation runs anytime you ```create```, ```update``` or ```delete``` stacks. For example, you might want to include resources that aren't available as AWS CloudFormation resource types. All such use-cases could be served by a ```Custom Resource``` implemented using ```Lambda``` function or ```SNS```. Here's how it works:  
+
+{{< figure src="images/uploads/CustomResource-Lambda.png" class="alignright">}}
+
+1. CloudFormation retrieves your package source from S3.
+2. CloudFormation Deploys Lambda Function.
+3. Lambda runs and returns data to CF.
+4. CloudFormation deploys other resources.
+
+CloudFormation Templates require three elements to utilize Lambda Functions:
+
+* Lambda Function (Either inline or a zip file in S3)
+  - Handler
+  - Runtime
+  - Role
+  - Timeout
+* Lambda Execution Role
+* Custom Resource (```ServiceToken``` property → Lambda Function ```ARN```)
+
+Here's some scenarios
+
+- ❓If we hardcode AMI Id's in CloudFormation mapping, and when AWS rolls out new AMI's our template would become **stale**:sneezing_face: 
+  - 💡Lambda Function which retrieves AMI ID for instance type/region in real time. Use returned AMI to provision EC2:
+    [Custom-Resources-Lambda-Lookup-Amiids](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/walkthrough-custom-resources-lambda-lookup-amiids.html)
+
+- ❓If we want to delete a stack with a **non-empty** s3 bucket created via cloudformation, the bucket needs to be emptied󠀠󠀠 first.
+  - 💡Create a lambda function to clean up your bucket first from your CloudFormation stack 
+
+- ❓If we create an IAM user with a custom password via CloudFormation, we need to make sure the password is correct!
+  - 💡A second parameter (confirm password) can be created, and a Lambda Function checks and confirms if they match. Stack creation only proceeds if they match.
+
+### SSM Parameters
+
+* Reference parameters in Systems Manager Parameter Store
+* Specify SSM parameter key as the value in CloudFormation template.
+* CloudFormation always fetches the latest value (you can’t specify parameter version)
+* Validation done on SSM parameter keys, but not values
+* Supported SSM Parameter Types:
+  * AWS::SSM::Parameter::Name
+  * AWS::SSM::Parameter::Value<String>
+  * AWS::SSM::Parameter::Value<List<String>> or 
+  * AWS::SSM::Parameter::Value<CommaDelimitedList>
+  * AWS::SSM::Parameter::Value<AWS-Specific Parameter>
+  * AWS::SSM::Parameter::Value<List<AWS-Specific Parameter>>
+```yml
+Parameters:
+  InstanceType:
+    Description: WebServer EC2 instance type
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /dev/ec2/instanceType
+    
+  ImageId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref ImageId
+```
+
+### Dynamic References
+
+* Reference values stored in SSM Parameter Store of type String and StringList
+* If no version specified, CloudFormation uses the latest version
+* Doesn’t support public SSM parameters (e.g., Amazon Linux 2 AMI)
+
+```yml
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref ImageId
+      KeyName: !Ref KeyName
+      # ssm dynamic reference
+      InstanceType: '{{resolve:ssm:/ec2/instanceType:1}}'
+
+  MyIAMUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: 'sample-user'
+      LoginProfile:
+        # ssm-secure dynamic reference (latest version)
+        Password: '{{resolve:ssm-secure:/iam/userPassword}}'
+
+  MyDBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t2.micro
+      Engine: mysql
+      AllocatedStorage: "20"
+      VPCSecurityGroups:
+      - !GetAtt [DBEC2SecurityGroup, GroupId]
+      # secretsmanager dynamic reference
+      MasterUsername: '{{resolve:secretsmanager:MyRDSSecret:SecretString:username}}'
+      MasterUserPassword: '{{resolve:secretsmanager:MyRDSSecret:SecretString:password}'
+```
+
+### StackSets
+
+
+
