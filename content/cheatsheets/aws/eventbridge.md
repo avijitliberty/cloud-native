@@ -158,31 +158,33 @@ Create rules the following ways:
 
 ## Use Cases
 
-Reduce Costs by Deleting Orphaned EBS Volumes
+There's a plethora of use cases for ```EventBridge``` integration, here's some examples:
 
-Remediating EC2 Auto Scaling Group Modifications with EventBridge
+* Reduce Costs by Deleting Orphaned EBS Volumes
 
-Implementing Amazon GuardDuty and Amazon EventBridge
+* Remediating EC2 Auto Scaling Group Modifications with EventBridge
 
-Triggering Events with CloudTrail Logs
+* Implementing Amazon GuardDuty and Amazon EventBridge
+
+* Triggering Events with CloudTrail Logs
 
 ## Event Driven Architectures
 
 Here's a few important motivations for a Event Driven Architecture and EventBridge is at the ```cornerstone``` of this pattern:
 
-**PAY FOR USE**: 
+**PAY FOR USE**
 
 Event-driven architectures are **push-based**, so everything happens **on-demand** as the event presents itself in the router. This way, you’re not paying💰 for continuous polling to check for an event. This means less network bandwidth consumption, less CPU utilization, less idle fleet capacity, and less SSL/TLS handshakes.
 
-**SCALE AUTOMATICALLY**: 
+**SCALE AUTOMATICALLY**
 
 Let the cloud provider handle the scaling for you. No more estimating workloads and scaling policies. And if you've been a part of that process, you know it can be a nightmare💤💀
 
-**SCALE AND FAIL** INDEPENDENTLY: 
+**SCALE AND FAIL** INDEPENDENTLY
 
 By decoupling:chains: your services, they are only aware of the **event router**, not each other. This means that your services are interoperable, but if one service has a failure, the rest will keep running. The event router acts as an elastic buffer that will accommodate surges in workloads.
 
-**AUDITING**:
+**AUDITING**
 
 An event router acts as a centralized location to audit🕵 your application and define policies. These policies can restrict who can publish and subscribe to a router and control which users and resources have permission to access your data.
 
