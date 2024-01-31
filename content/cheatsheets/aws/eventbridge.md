@@ -26,7 +26,7 @@ Amazon EventBridge is a service that offers us a **serverless** event bus with `
 
 ```Serverless``` pipeline that receives and sends events from different sources. These can be **default** AWS services, **custom** sources, or they can be **third-party** sources.
 
-* **default** - Created at account creation, 1 per region. Used formerly by **CloudWatch** Events.
+* **Default** - Created at account creation, 1 per region. Used formerly by **CloudWatch** Events.
 * **Custom** - Created by users. They can be **cross-account** or **cross-region** as well if you define appropriate ```Resource Policy``` like so:
 
   ```json
