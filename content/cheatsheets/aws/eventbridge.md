@@ -190,5 +190,8 @@ An event router acts as a centralized location to audit🕵 your application and
 
 ## Further Read
 
+https://dev.to/deeheber/eventbridge-emoji-event-patterns-53h4
+
 [^1]:https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns-content-based-filtering.html
 [^2]:https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-transform-target-input.html
+
