@@ -57,9 +57,9 @@ Amazon EventBridge is a service that offers us a **serverless** event bus with `
 
 There are 3 main components to an event which we need to lookout for when creating rules to target events: 
 
-* **detail** - The detail field varies based on the source that generated the event.
-* **source** - The source field is meant to identify what source the event came from.
-* **detail_type** - The detail-type field offers a means to know which fields and values can be referenced within the event.
+* **detail** - A JSON object that contains information about the ```event```. The service generating the event determines the content of this field.
+* **source** - The source field is meant to identify what ```source``` the event came from. All events that originate from other AWS services begin with **aws.**
+* **detail_type** - The detail-type is related to the source AWS service or customer-generated event source. The ```detail-type``` identifies, in combination with the ```source``` field, what ```event``` occurred.
 
 Here's an example of a EC2 Termination event: 
 
@@ -120,7 +120,9 @@ Create rules the following ways:
       ```
 * **Schedule**
   
-  * Event Bridge rule can run periodically on a schedule (cron and rate)
+  * Event Bridge rule can run periodically on a schedule (cron and rate).
+  * With EventBridge ```Scheduler```, you can schedule one-time or recurrently tens of millions of tasks across many AWS services without provisioning or managing underlying infrastructure.
+  * While you can use rules to schedule tasks, Amazon EventBridge ```Scheduler``` is better suited for scheduling events **at scale**. If you need to schedule tasks that exceed the EventBridge rules **quotas** on the number of rules or invocation throughput, EventBridge Scheduler might fit your needs.
 
 {{% callout note %}}
 * There is a limit of **300** rules per event bus.
@@ -190,6 +192,7 @@ An event router acts as a centralized location to audit🕵 your application and
 
 ## Further Read
 
+https://aws.amazon.com/blogs/compute/introducing-amazon-eventbridge-scheduler/
 https://dev.to/deeheber/eventbridge-emoji-event-patterns-53h4
 
 [^1]:https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns-content-based-filtering.html

@@ -166,28 +166,24 @@ Some AWS CLI commands (such as EC2) can become expensive if they succeed, say if
 
 ## Examples
 
+> WINDOWS users will need to use ```^``` (Shift + 6) instead of ```\``` for line continuation.
+
 ### EC2
 
-  ```sh
-  aws ec2 describe-instances
-  aws ec2 describe-images
-      aws ec2 start-instances --instance-ids i-12345678c
-      aws ec2 terminate-instances --instance-ids i-12345678c
-      aws ec2 run-instances --image-id ami-922914f7 \
-          --count 1 \
-          --instance-type t2.micro \
-          --key-name puttykey \
-          --security-group-ids sg-10af597a \
-          --subnet-id subnet-07e36f7c
-  aws ec2 run-instances --image-id ami-922914f7 \
-          --count 1 \
-          --instance-type t2.micro \
-          --key-name puttykey \
-          --security-group-ids sg-10af597a \
-          --subnet-id subnet-07e36f7c \
-          --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=AWSCLI-EC2}]'
-  ```
-
+```bash
+aws ec2 describe-instances
+aws ec2 describe-images
+aws ec2 start-instances --instance-ids i-12345678c
+aws ec2 terminate-instances --instance-ids i-12345678c
+aws ec2 run-instances \
+    --image-id ami-922914f7 \
+    --count 1 \
+    --instance-type t2.micro \
+    --key-name puttykey \
+    --security-group-ids sg-10af597a \
+    --subnet-id subnet-07e36f7c \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=AWSCLI-EC2}]'
+```
 AWS **Instance Metadata** allows AWS EC2 instances to ”learn about themselves” without using  an IAM Role for that purpose.
 * The URL for the metadata is: http://169.254.169.254/latest/meta-data
 * You can retrieve the IAM Role name from the metadata, but you CANNOT retrieve the IAM Policy.
@@ -196,46 +192,50 @@ AWS **Instance Metadata** allows AWS EC2 instances to ”learn about themselves�
 
 ### S3
 
-  ```sh
-      aws s3 mb s3://cloudformation-sambucket --region us-west-1
-      aws s3 ls s3://mybucket
-      aws s3 rm s3://mybucket/folder --recursive
-      aws s3 cp myfolder s3://mybucket/folder --recursive
-      aws s3 sync myfolder s3://mybucket/folder --exclude *.tmp
-      aws configure set default.s3.signature_version s3v4
-      aws s3 presign s3://<bucket-name>/<object-name> \
-             --expires-in 300 \
-             --region us-west-1
-  ```
+```bash
+# Make Bucket
+aws s3 mb s3://cloudformation-sambucket --region us-west-1
+# List Bucket contents
+aws s3 ls s3://mybucket
+# Remove bucket folder
+aws s3 rm s3://mybucket/folder --recursive
+# Copy myfolder to S3
+aws s3 cp myfolder s3://mybucket/folder --recursive
+aws s3 sync myfolder s3://mybucket/folder --exclude *.tmp
+aws configure set default.s3.signature_version s3v4
+aws s3 presign s3://<bucket-name>/<object-name> \
+    --expires-in 300 \
+    --region us-west-1
+```
 
 ### Lambda
 
-  ```sh
-  ## List functions
-  aws lambda list-functions --region us-west-1
+```bash
+## List functions
+aws lambda list-functions --region us-west-1
 
-  ## Synchronous Invocations
-  aws lambda invoke \
-             --function-name hello-world \
-             --cli-binary-format raw-in-base64-out \
-             --payload '{"key1": "value1", "key2": "value2", "key3": "value3" }' \
-             --region us-west-1 response.json
+## Synchronous Invocations
+aws lambda invoke \
+    --function-name hello-world \
+    --cli-binary-format raw-in-base64-out \
+    --payload '{"key1": "value1", "key2": "value2", "key3": "value3" }' \
+    --region us-west-1 response.json
 
-  ## Asynchronous Invocations
-  aws lambda invoke \
-             --function-name hello-world \
-             --cli-binary-format raw-in-base64-out \
-             --payload '{"key1": "value1", "key2": "value2", "key3": "value3" }' \
-             --invocation-type Event \
-             --region us-west-1 response.json
+## Asynchronous Invocations
+aws lambda invoke \
+    --function-name hello-world \
+    --cli-binary-format raw-in-base64-out \
+    --payload '{"key1": "value1", "key2": "value2", "key3": "value3" }' \
+    --invocation-type Event \
+    --region us-west-1 response.json
 
-  ## Create the Lambda function as a zip file
-  aws lambda create-function \
-             --zip-file fileb://function.zip \
-             --function-name lambda-xray-with-dependencies \
-             --runtime nodejs16.x \
-             --handler index.handler 
-             --role <ROLE_ARN>
+## Create the Lambda function as a zip file
+aws lambda create-function \
+    --zip-file fileb://function.zip \
+    --function-name lambda-xray-with-dependencies \
+    --runtime nodejs16.x \
+    --handler index.handler 
+    --role <ROLE_ARN>
 
   ```
 
@@ -369,19 +369,54 @@ AWS **Instance Metadata** allows AWS EC2 instances to ”learn about themselves�
 
 ### SSM
 
-  ```
-  # GET PARAMETERS
-  aws ssm get-parameters --names /my-app/dev/db-url /my-app/dev/db-password
-  # GET PARAMETERS WITH DECRYPTION
-  aws ssm get-parameters --names /my-app/dev/db-url /my-app/dev/db-password --with-decryption
+```bash
+## Retrieve SSM managed EC2 instance details
+aws ssm describe-instance-information
+## Scan a managed node for patch compliance
+aws ssm send-command \
+    --document-name 'AWS-RunPatchBaseline' \
+    --targets Key=InstanceIds,Values='i-<your-instance-id>' \
+    --parameters 'Operation=Scan’
 
-  # GET PARAMETERS BY PATH
-  aws ssm get-parameters-by-path --path /my-app/dev/
-  # GET PARAMETERS BY PATH RECURSIVE
-  aws ssm get-parameters-by-path --path /my-app/ --recursive
-  # GET PARAMETERS BY PATH WITH DECRYPTION
-  aws ssm get-parameters-by-path --path /my-app/ --recursive --with-decryption
-  ```
+## Review the status of a Run command task
+aws ssm list-commands  --command-id "<CommandId-value>"
+## Securely connect to a managed node
+aws ssm start-session --target i-<your-instance-id>
+## Start an Automation runbook
+aws ssm start-automation-execution \
+    --document-name "AWS-RestartEC2Instance" \
+    --parameters "InstanceId=i-<your-instance-id>"
+
+## Status of particular Automation run
+aws ssm get-automation-execution --automation-execution-id <your-execution-id>
+
+## View applications installed on a managed node
+aws ssm list-inventory-entries \
+    --instance-id "i-<your-instance-id>" \
+    --type-name "AWS:Application" \
+    --max-results 1
+
+## GET PARAMETERS
+aws ssm get-parameters --names /my-app/dev/db-url /my-app/dev/db-password
+## GET PARAMETERS WITH DECRYPTION
+aws ssm get-parameters \
+    --names /my-app/dev/db-url /my-app/dev/db-password \
+    --with-decryption
+
+## GET PARAMETERS BY PATH
+aws ssm get-parameters-by-path --path /my-app/dev/
+## GET PARAMETERS BY PATH RECURSIVE
+aws ssm get-parameters-by-path --path /my-app/ --recursive
+## GET PARAMETERS BY PATH WITH DECRYPTION
+aws ssm get-parameters-by-path --path /my-app/ --recursive --with-decryption
+```
+
+{{% callout note %}}
+
+If you want to use the AWS CLI to start and end sessions that connect you to your managed nodes, you must first install the Session Manager plugin on your local machine. See [Install the Session Manager plugin for the AWS CLI](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html)
+
+{{% /callout %}}
+
 
 ### CloudWatch
 
@@ -450,38 +485,47 @@ AWS **Instance Metadata** allows AWS EC2 instances to ”learn about themselves�
 
 ### Code Deploy
 
-* Create your application.zip and load it into CodeDeploy:
-  ```
-  aws deploy create-application --application-name mywebapp
-  aws deploy push --application-name mywebapp --s3-location s3://<bucket-name>/webapp.zip --ignore-hidden-files
-  ```
-* To deploy with this revision, run:
-  ```
-  aws deploy create-deployment --application-name mywebapp --s3-location bucket=c<bucket-name>,key=webapp.zip,bundleType=zip,eTag=d1de362aaf3254ee2d6cc5aab0e3f7d4 --deployment-group-name <deployment-group-name> --deployment-config-name <deployment-config-name> --description <description>
-  ```
+```bash
+# Create your application.zip and load it into CodeDeploy:
+  
+aws deploy create-application --application-name mywebapp
+aws deploy push \
+    --application-name mywebapp \
+    --s3-location s3://<bucket-name>/webapp.zip \
+    --ignore-hidden-files
+  
+# To deploy with this revision, run:
+  
+aws deploy create-deployment \
+    --application-name mywebapp \
+    --s3-location bucket=<bucket-name>,key=webapp.zip,bundleType=zip,eTag=d1de362aaf3254ee2d6cc5aab0e3f7d4 \
+    --deployment-group-name <deployment-group-name> \
+    --deployment-config-name <deployment-config-name> \
+    --description <description>
+```
 
 ### CloudFormation
 
-* To create your EC2 instance using CloudFormation:
-> WINDOWS users will need to use ^ (Shift + 6) instead of \ for line continuation.
+```bash
+# To create your EC2 instance using CloudFormation:
+aws cloudformation create-stack --stack-name CodeDeployDemoStack \
+    --template-url http://s3-eu-west-1.amazonaws.com/cftemplates/CF_Template.json \
+    --parameters  ParameterKey=InstanceCount,ParameterValue=1 \
+                  ParameterKey=InstanceType,ParameterValue=t2.micro \
+                  ParameterKey=KeyPairName,ParameterValue=cfn-key \
+                  ParameterKey=OperatingSystem,ParameterValue=Linux \
+                  ParameterKey=SSHLocation,ParameterValue=0.0.0.0/0 \
+                  ParameterKey=TagKey,ParameterValue=Name \
+                  ParameterKey=TagValue,ParameterValue=CodeDeployDemo \
+                  --capabilities CAPABILITY_IAM
 
-  ```
-  aws cloudformation create-stack --stack-name CodeDeployDemoStack \
-  --template-url http://s3-eu-west-1.amazonaws.com/cftemplates-faye/CF_Template.json \
-  --parameters ParameterKey=InstanceCount,ParameterValue=1 \
-  ParameterKey=InstanceType,ParameterValue=t2.micro \
-  ParameterKey=KeyPairName,ParameterValue=irkp \
-  ParameterKey=OperatingSystem,ParameterValue=Linux \
-  ParameterKey=SSHLocation,ParameterValue=0.0.0.0/0 \
-  ParameterKey=TagKey,ParameterValue=Name \
-  ParameterKey=TagValue,ParameterValue=CodeDeployDemo \
-  --capabilities CAPABILITY_IAM
-  ```
+# Verify that the Cloud Formation stack has completed using:
+aws cloudformation describe-stacks \
+    --stack-name CodeDeployDemoStack \
+    --query "Stacks[0].StackStatus" \
+    --output text
+```
 
-* Verify that the Cloud Formation stack has completed using:
-  ```
-  aws cloudformation describe-stacks --stack-name CodeDeployDemoStack --query "Stacks[0].StackStatus" --output text
-  ```
 ### ECS
 
     aws ecs create-cluster
