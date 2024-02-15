@@ -15,12 +15,19 @@ Tips and Tricks
 
 ## Overview
 
-The AWS CLI is a beast of a command-line interface that provides commands for many and many different AWS services (224 at the time of this writing).
+The AWS CLI is a **beast💪** of a command-line interface that provides commands for many and many different AWS services (**224** at the time of this writing).
 
-The CLI is written in Python so you need to have a functioning Python environment to work with it. The CLI is very handy for scripting interactions or common tasks that you might do manually in the AWS Console. It also provides good capabilities to generate text-based reports to answer questions like, "How many Mysql RDS instances do we have and what version of are they running at?" You could look at the console to get this information or you can get a consolidated report by issuing the following command:
+The CLI is written in Python so you need to have a functioning Python environment to work with it. The CLI is very handy for scripting interactions or common tasks that you might do manually in the AWS Console. It also provides good capabilities to generate text-based reports to answer questions like: 
+
+> How many RDS instances do we have and what version of are they running at?
+
+You could look at the console to get this information or you can get a consolidated report by issuing the following command:
 
 ```bash
-$ aws rds describe-db-instances --query 'DBInstances[*].{InstanceName:DBInstanceIdentifier,Engine:Engine,Version:EngineVersion}'  --output table --profile sandbox
+$ aws rds describe-db-instances \
+      --query 'DBInstances[*].{InstanceName:DBInstanceIdentifier,Engine:Engine,Version:EngineVersion}' \
+      --output table \
+      --profile sandbox
 --------------------------------------------------
 |               DescribeDBInstances              |
 +--------+---------------------------+-----------+
@@ -34,67 +41,74 @@ $ aws rds describe-db-instances --query 'DBInstances[*].{InstanceName:DBInstance
 
 ## Installation
 
-Installing the AWS CLI differs across operating systems, so please follow the [official instructions](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) for your operating system to install version 2 of the AWS CLI on your machine.
+Installing the AWS CLI differs across operating systems, please follow the [official instructions](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) for your operating system to install version 2 of the AWS CLI on your machine.
 
 ## Configuration
 
-* After you install the CLI, you can configure your command line:
+After you install the CLI, you can configure your command line:
 
-  ```
-  aws configure
-  AWS Access Key ID [****************Kweu]:
-  AWS Secret Access Key [****************CmqH]:
-  Default region name [us-west-1]:
-  Default output format [yaml]:
-  ```
-  You could run the following commands to validate the installation.
+```bash
+aws configure
+AWS Access Key ID [****************Kweu]:
+AWS Secret Access Key [****************CmqH]:
+Default region name [us-west-1]:
+Default output format [yaml]:
+```
+You could run the following commands to validate the installation.
 
-    ```
-    # This command lists all the AWS regions in which we can make use of EC2 instances.
-    aws ec2 describe-regions
-    # List the AWS CLI configuration data.
-    aws configure list
-    # Retrieves information about the IAM user based on the AWS access key ID
-    # used to sign the request to this operation.
-    aws iam get-user
-    ```
+```bash
+
+# This command lists all the AWS regions in which we can make use of EC2 instances.
+aws ec2 describe-regions
+# List the AWS CLI configuration data.
+aws configure list
+# Retrieves information about the IAM user based on the AWS access key ID
+# used to sign the request to this operation.
+aws iam get-user
+```
 
 {{% callout note %}}
+
 This stores the AWS credentials in the user's home directory. In Windows at C:\\Users\\[username]\\.aws
+
 {{% /callout %}}
 
-* You can also use multiple AWS users from the same account or users from multiple accounts with the AWS CLI. You would have to configure the command-line first like so:
+You can also use multiple AWS users from the same account or users from multiple accounts with the AWS CLI. You would have to configure the command-line first like so:
 
-  ```
-  aws configure --profile <profile-name>
-  ```
-  and then use it while running CLI commands like so:
-  ```
-  aws s3 ls --profile <profile-name>
-  ```
+```bash
+aws configure --profile <profile-name>
+```
+and then use it while running CLI commands like so:
+
+```bash
+aws s3 ls --profile <profile-name>
+```
 
 ## Pagination
 
-* You can control the number of items included in the output when you run a CLI command.
-By Default AWS CLI uses the page size of 1000; i.e if you make this call:
-  ```
+* You can control the number of items included in the output when you run a CLI command. By Default AWS CLI uses the page size of **1000**; i.e if you make this call:
+  
+  ```bash
   aws s3api list-objects --bucket <YOUR_BUCKET_NAME>
   ```
   and you have 2500 objects in your bucket, you will be making 3 API calls to S3 but displays all the items at one go. You can set the page-size option to return a smaller set for each API call.
-  ```
+  
+  ```bash
   aws s3api list-objects --bucket <YOUR_BUCKET_NAME> --page-size 5
   ```
 * Use max-items option to return fewer items in the CLI output.
-  ```
+  
+  ```bash
   aws s3api list-objects --bucket <YOUR_BUCKET_NAME> --max-items 1
   ```
 ## Dry run
 
-* Sometimes, we’d just like to make sure we have the permissions…But not actually run the commands!
-Some AWS CLI commands (such as EC2) can become expensive if they succeed, say if we wanted to try to create an EC2 Instance. Some AWS CLI commands (not all) contain a --dry-run option to simulate API calls.
+* Sometimes, we’d just like to make sure we have the **permissions**…But not actually run the commands!
+Some AWS CLI commands (such as EC2) can become expensive if they succeed, say if we wanted to try to create an EC2 Instance. Some AWS CLI commands (not all) contain a ```--dry-run``` option to simulate API calls.
 
   Example:
-  ```
+  
+  ```bash
   aws ec2 run-instances \
       --dry-run \
       --image-id ami-922914f7 \
@@ -102,7 +116,8 @@ Some AWS CLI commands (such as EC2) can become expensive if they succeed, say if
       --instance-type t2.micro
   ```
   The above command would fail with the following error:
-  ```
+  
+  ```bash
   An error occurred (DryRunOperation) when calling the RunInstances operation:
   Request would have succeeded, but DryRun flag is set.
   ```
@@ -112,21 +127,23 @@ Some AWS CLI commands (such as EC2) can become expensive if they succeed, say if
 * When you run API calls and they fail, you can get a long error message. This error message can be decoded using the STS command line: **sts decode-authorization-message**
 
   Example:
-  ```
+
+  ```bash
   aws sts decode-authorization-message --encoded-message <value>
   ```
 
 ## MFA with CLI
 
 * To use MFA with the CLI, you must create a temporary session. To do so, you must run the STS GetSessionToken API call like so:
-  ```
+  
+  ```bash
   aws sts get-session-token \
           --serial-number arn-of-the-mfa-device \
           --token-code code-from-token \
           --duration-seconds 3600
   ```
   This command would give an output with the access token like so:
-  ```
+  ```bash
   {
       "Credentials": {
           "AccessKeyId": "access-key-id",
@@ -137,16 +154,18 @@ Some AWS CLI commands (such as EC2) can become expensive if they succeed, say if
   }
   ```
   We could then use these credentials to configure our CLI like so:
-  ```
+  
+  ```bash
   aws configure --profile mfa
   ```
+
 ## Credentials Chain
 
 * The CLI will look👀 for credentials in this order:
 
   1. Command line options – --region, --output, and --profile
-  2. Environment variables – AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,
-  and AWS_SESSION_TOKEN
+  2. Environment variables – **AWS_ACCESS_KEY_ID**, **AWS_SECRET_ACCESS_KEY**,
+  and **AWS_SESSION_TOKEN**
   3. CLI credentials file – aws configure
   ~/.aws/credentials on Linux / Mac & C:\Users\user\.aws\credentials on Windows
   4. CLI configuration file – aws configure
@@ -157,7 +176,7 @@ Some AWS CLI commands (such as EC2) can become expensive if they succeed, say if
 * The Java SDK will look for credentials in this order:
 
   1. Environment variables –
-  AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+  **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY**
   2. Java system properties – aws.accessKeyId and aws.secretKey
   3. The default credential profiles file – ex at: ~/.aws/credentials, shared by
   many SDK
@@ -420,20 +439,20 @@ If you want to use the AWS CLI to start and end sessions that connect you to you
 
 ### CloudWatch
 
-  ```
-  # associate with existing log group
-  aws logs associate-kms-key \
-     --log-group-name /aws/lambda/hello-world \
-     --kms-key-id arn:aws:kms:eu-west-2:387124123361:key/0509dc31-00a4-4ef6-a739-3d77b2e011f5 \
-     --region eu-west-2
+```bash
+## associate with existing log group
+aws logs associate-kms-key \
+    --log-group-name /aws/lambda/hello-world \
+    --kms-key-id arn:aws:kms:eu-west-2:387124123361:key/0509dc31-00a4-4ef6-a739-3d77b2e011f5 \
+    --region eu-west-2
 
-  # create new log group
-  aws logs create-log-group \
-      --log-group-name /example-encrypted \
-      --kms-key-id arn:aws:kms:eu-west-2:387124123361:key/0509dc31-00a4-4ef6-a739-3d77b2e011f5 \
-      --region eu-west-2
+## create new log group
+aws logs create-log-group \
+    --log-group-name /example-encrypted \
+    --kms-key-id arn:aws:kms:eu-west-2:387124123361:key/0509dc31-00a4-4ef6-a739-3d77b2e011f5 \
+    --region eu-west-2
 
-  ```
+```
 
 ### Kinesis
 
