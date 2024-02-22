@@ -17,19 +17,19 @@ Monitoring Basics in AWS
 ## Overview
 
 Monitoring in AWS is instrumented via 3 services primarily:
-* AWS CloudWatch:
+* AWS ```CloudWatch```:
 
   * Metrics: Collect and track key metrics
   * Logs: Collect, monitor, analyze and store log files
   * Events: Send notifications when certain events happen in your AWS
   * Alarms: React in real-time to metrics / events
 
-* AWS X-Ray:
+* AWS ```X-Ray```:
 
   * Troubleshooting application performance and errors
   * Distributed tracing of microservices
 
-* AWS CloudTrail:
+* AWS ```CloudTrail```:
 
   * Internal monitoring of API calls being made
   * Audit changes to AWS Resources by your users
@@ -38,28 +38,28 @@ Overall all together these 3 technologies give you a solid foundation to monitor
 
 ## CloudWatch
 
-* Amazon CloudWatch is Amazon’s main observability service. With a log server,metrics server, dashboards, and alarms, it provides a wide range of observability features.
+* Amazon CloudWatch is Amazon’s main **observability** service. With a log server, metrics server, dashboards, and alarms, it provides a wide range of observability features.
 
 * CloudWatch is basically a metrics repository. Any AWS service, such as EC2 puts metrics on the repository and you retrieve statistics based on those metrics. If you put your own metrics into CloudWatch, you can retrieve statistics on those as well.
-* CloudWatch does not aggregate data across regions. Therefore metrics are completely separate across regions.
+* CloudWatch does **not aggregate** data across regions. Therefore metrics are completely separate across regions.
 
   ![CloudWatch-Overview](/images/uploads/cloudwatch-overview.PNG)
 
 ### CloudWatch Concepts:
 
-1. **Namespaces**: Metrics belong to namespaces. There's no default namespace. The AWS namespaces follow the naming convention AWS/service.
+1. **Metrics**:
 
-2. **Metrics**:
-
-    * Represents a time-ordered set of data points that are published to CloudWatch.
+    * Represents a **time-ordered** set of data points that are published to CloudWatch.
     * It is the variable to monitor (CPUUtilization, NetworkIn…)
-    * Metrics cannot be deleted but they will automatically expire after 15 months if no new data is published to them. As new data comes in, data older than 15 months is dropped.
+    * Metrics cannot be **deleted** but they will automatically **expire** after 15 months if no new data is published to them. As new data comes in, data older than 15 months are dropped.
+    * Metrics are uniquely defined by:
+      * **Namespace** : Metrics belong to namespaces. There's no default namespace. The AWS namespaces follow the naming convention like ```AWS/ec2```
+      * **Name** : e.g. mem_used_percent
+      * zero or more **Dimensions** : ```name/value``` pair that is part of the identity of a metric. You can assign up to **10** dimensions to a metric.
 
-3. **Dimension**: It is an attribute of a metric (instance id, environment, etc…). Up to 10 dimensions per metric.
+2. **Statistics**: Metric data **aggregations** over a specified period of time.
 
-4. **Statistics**: Metric data aggregations over a specified period of time.
-
-5. **Custom Metrics**:
+3. **Custom Metrics**:
 
     * Possibility to define and send your own custom metrics to CloudWatch
     * Ability to use dimensions (attributes) to segment metrics like Instance.id, Environment.name
