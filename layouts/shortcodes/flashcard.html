@@ -1,0 +1,13 @@
+{{ $front := .Get "front" }}
+{{ $back := .Get "back" }}
+
+<div class="flip-card">
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+      {{ $front | safeHTML }}
+    </div>
+    <div class="flip-card-back">
+      {{ $back | safeHTML }}
+    </div>
+  </div>
+</div>
