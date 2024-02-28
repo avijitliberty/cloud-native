@@ -294,13 +294,20 @@ div.alert-construction > div:first-child::before {
   }
 }
 
+.flashcard-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
 .flip-card {
   background-color: transparent;
   width: 200px;
   height: 200px;
   perspective: 1000px;
   border: 2px solid brown; /* Add border color */
-  box-shadow: 8px 16px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+  margin: 10px; /* Adjust margin as needed */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
 }
 
 .flip-card-inner {
@@ -321,18 +328,16 @@ div.alert-construction > div:first-child::before {
   height: 100%;
   position: absolute;
   backface-visibility: hidden;
-  border: 2px #5C4033; /* Add border color */
+  border: 2px solid brown; /* Add border color */
 }
 
 .flip-card-front {
-  background-color: white;
+  background-color: #bbb;
   color: black;
-  border: #5C4033;
 }
 
 .flip-card-back {
-  background-color: #5C4033;
+  background-color: #2980b9;
   color: white;
   transform: rotateY(180deg);
 }
-

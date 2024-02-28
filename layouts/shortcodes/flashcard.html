@@ -1,5 +1,5 @@
-{{ $front := .Get "front" }}
-{{ $back := .Get "back" }}
+{{ $front := .Get "front" | markdownify }}
+{{ $back := .Inner | markdownify }}
 
 <div class="flip-card">
   <div class="flip-card-inner">
