@@ -137,6 +137,19 @@ Overall all together these 3 technologies give you a solid foundation to observa
   * Use API call PutMetricData
   * Use exponential back off in case of throttle errors
 
+  Monitoring metrics with multiple dimensions in CloudWatch is a powerful way to gain deeper insights into the performance of your resources. For example, you could monitor the CPU utilization of your EC2 instances, broken down by instance type and availability zone. This would allow you to see which instance types and availability zones are experiencing the highest CPU utilization, and take action to address any issues.
+
+To monitor metrics with multiple dimensions in CloudWatch, you can use the put-metric-data command in the AWS CLI. This command allows you to specify the dimensions for your metric, as well as the value and the unit of measurement. Here is an example of how you could use the put-metric-data command to monitor the CPU utilization of your EC2 instances, broken down by instance type and availability zone:
+
+```bash
+aws cloudwatch put-metric-data \
+    --metric-name CPUUtilization \
+    --namespace EC2 \
+    --dimensions InstanceType=t2.micro,AvailabilityZone=us-east-1a \
+    --value 70 \
+    --unit Percent
+```
+
 {{% callout note %}}
 AWS CloudWatch EC2 Detailed monitoring:
  * EC2 instance metrics have metrics “every 5 minutes” by default
