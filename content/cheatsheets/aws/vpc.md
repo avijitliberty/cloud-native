@@ -13,11 +13,13 @@ AWS VPC & Networking
 
 <!--more-->
 
-### Overview
+## Overview
 
-Within a Amazon Virtual Private Cloud (Amazon VPC), you can launch AWS resources in a logically isolated virtual network that you've defined. This virtual network closely resembles a traditional network with the benefits of the scalable infrastructure of AWS.
+A foundational networking service in AWS is the Amazon Virtual Private Cloud (Amazon VPC). It is a ```software-defined``` virtual private network. It is a service that you use to create secure private networks in AWS to host your applications and data. Your private services will run from this Amazon VPC. You can also connect your Amazon VPCs from your AWS private network to your on premises, creating a hybrid environment. 
 
-### Regions
+Within a Amazon Virtual Private Cloud (Amazon VPC), you can launch AWS resources in a logically **isolated** virtual network that you've defined. This virtual network closely resembles a traditional network with the benefits of the scalable infrastructure of AWS.
+
+## Regions
 
   ![AWS-Infrastructure](/images/uploads/aws-infrastructure.png)
  
@@ -27,7 +29,7 @@ Within a Amazon Virtual Private Cloud (Amazon VPC), you can launch AWS resources
  * Most AWS services are region-scope
  * 👉 [AWS Global Infrastructure](https://infrastructure.aws/)
 
-### Availability Zones
+## Availability Zones
 
  * Each region has many availability zones. 
    Example:
@@ -38,27 +40,27 @@ Within a Amazon Virtual Private Cloud (Amazon VPC), you can launch AWS resources
 * They’re separate from each other, so that they’re isolated from disasters
 * They’re connected with high bandwidth, ultra-low latency networking
 
-### Edge Locations
+## Edge Locations
 
  * Amazon has 400+ Points of Presence (400+ Edge Locations & 10+ Regional Caches) in 90+ cities across 40+ countries
  * Content is delivered to end users with lower latency
 
-### VPC
+## VPC
 
- * Private network to deploy your resources (regional resource). 
+Private network to deploy your resources (regional resource). 
  
- Here's how to create a VPC that you can use for a two-tier architecture in a production environment. To improve resiliency, you deploy the servers in two Availability Zones.
+Here's how to create a VPC that you can use for a two-tier architecture in a production environment. To improve resiliency, you deploy the servers in two Availability Zones.
 
- ![AWS-VPC](/images/uploads/vpc-network.png)
+![AWS-VPC](/images/uploads/vpc-network.png)
 
-### Subnets
+## Subnets
 
 Subnets allow you to partition your network inside your VPC (Availability Zone resource)
 * A public subnet is a subnet that is accessible from the internet
 * A private subnet is a subnet that is not accessible from the internet
 * To define access to the internet and between subnets, we use Route Tables
 
-### Route Tables
+## Route Tables
 
  * VPC has an implicit router, and you use route tables to control where network traffic is directed. 
  * Each subnet in your VPC must be associated with a route table, which controls the routing for the subnet.
@@ -66,17 +68,17 @@ Subnets allow you to partition your network inside your VPC (Availability Zone r
  * A public subnet has a route defined to the Internet Gateway for outbound traffic.
  * A subnet can only be associated with one route table at a time, but you can associate multiple subnets with the same subnet route table. 
 
-### Internet Gateway
+## Internet Gateway
 
  * Internet Gateways helps our VPC instances connect with the internet
  * Public Subnets have a route to the internet gateway
 
-### NAT Gateway
+## NAT Gateway
 
  * NAT Gateways (AWS-managed) & NAT Instances (self-managed) allow your instances in your Private Subnets 
 to access the internet while remaining private
 
-### Network Access Control List (NACL)
+## Network Access Control List (NACL)
 
 * A firewall which controls traffic from and to a subnet
 * Can have ALLOW and DENY rules
@@ -101,7 +103,7 @@ For this scenario, rule 100 is matched and denies all HTTP(80) traffic in the su
 
 {{% /callout %}}
 
-### Security Groups
+## Security Groups
 
 * A firewall that controls traffic to and from an ENI / an EC2 Instance
 * You can specify the source, port range, and protocol for each inbound rule. 
@@ -138,7 +140,7 @@ Whereas with the Security Group, because it is stateful, traffic is permitted ou
 {{% /callout %}}
 
 
-### Elastic Network Interface (ENI)
+## Elastic Network Interface (ENI)
 
 An elastic network interface is a logical networking component in a VPC that represents a virtual network card (NIC). It can include the following attributes:
 
@@ -166,7 +168,10 @@ An elastic network interface is a logical networking component in a VPC that rep
 
  ![Multiple-Eni](/images/uploads/vpc-ec2-multiple-eni.png)
 
-### VPC Endpoint
+## VPC Endpoint
+
+![S3 Access Inside VPC](/images/uploads/private-ec2-s3-access.png)
+![S3 Access via VPC Endpoint](/images/uploads/private-ec2-s3-vpc-endpoint.png)
 
 
 

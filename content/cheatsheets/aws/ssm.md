@@ -20,9 +20,3 @@ Automate Your Infrastructure
 
 ![SSM Overview](/images/uploads/ssm-overview.png)
 
-
-
-
-
-
-

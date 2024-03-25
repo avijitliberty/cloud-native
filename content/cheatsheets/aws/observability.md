@@ -1,6 +1,6 @@
 ---
-title: Monitoring
-linktitle: Monitoring
+title: Observability
+linktitle: Observability
 type: book
 tags:
   - AWS
@@ -10,73 +10,155 @@ date: "2019-05-05T00:00:00+01:00"
 weight: 100
 ---
 
-Monitoring Basics in AWS
+Monitoring and Logging in AWS
 
 <!--more-->
 
 ## Overview
 
-Monitoring in AWS is instrumented via 3 services primarily:
-* AWS ```CloudWatch```:
+> ```Security``` is job number 1️⃣, and ```everything``` fails all the time - Werner Vogels, Amazon CTO
 
-  * Metrics: Collect and track key metrics
-  * Logs: Collect, monitor, analyze and store log files
-  * Events: Send notifications when certain events happen in your AWS
-  * Alarms: React in real-time to metrics / events
+These are just a few of the many reasons that we need **Observability** and **Monitoring**. 
+![Cloud-Watching](/images/uploads/cloud-watching.png)
 
-* AWS ```X-Ray```:
+The 3 pillars 🏛️ of observability in AWS:
 
-  * Troubleshooting application performance and errors
-  * Distributed tracing of microservices
+{{< accordion "CloudWatch" >}}
+  * **Metrics**: Metrics are a numeric representation of data measured over time or time series data.
+  * **Logs**: Immutable, timestamped records of discrete events that happen over time.
+  * **Events**: Send notifications when certain events happen in your AWS
+  * **Alarms**: React in real-time to metrics/events
+{{< /accordion >}}
 
-* AWS ```CloudTrail```:
+{{< accordion "X-Ray" >}}
+  * X-ray traces represent a series of related distributed events that encode the end-to-end request flow through a distributed system. 
+  * They provide visibility, such as latency, into the path traversed by a request and the structure of the request.
+{{< /accordion >}}
 
+{{< accordion "CloudTrail" >}}
   * Internal monitoring of API calls being made
   * Audit changes to AWS Resources by your users
+{{< /accordion >}}
 
-Overall all together these 3 technologies give you a solid foundation to monitoring AWS.
+Overall all together these 3 technologies give you a solid foundation to observability in AWS.
 
 ## CloudWatch
 
 * Amazon CloudWatch is Amazon’s main **observability** service. With a log server, metrics server, dashboards, and alarms, it provides a wide range of observability features.
 
-* CloudWatch is basically a metrics repository. Any AWS service, such as EC2 puts metrics on the repository and you retrieve statistics based on those metrics. If you put your own metrics into CloudWatch, you can retrieve statistics on those as well.
+* CloudWatch is basically a **metrics** repository. Any AWS service, such as EC2 puts metrics on the repository and you retrieve statistics based on those metrics. If you put your own metrics into CloudWatch, you can retrieve statistics on those as well.
 * CloudWatch does **not aggregate** data across regions. Therefore metrics are completely separate across regions.
 
   ![CloudWatch-Overview](/images/uploads/cloudwatch-overview.PNG)
 
-### CloudWatch Concepts:
+###### CloudWatch Concepts:
 
 1. **Metrics**:
 
-    * Represents a **time-ordered** set of data points that are published to CloudWatch.
-    * It is the variable to monitor (CPUUtilization, NetworkIn…)
-    * Metrics cannot be **deleted** but they will automatically **expire** after 15 months if no new data is published to them. As new data comes in, data older than 15 months are dropped.
-    * Metrics are uniquely defined by:
-      * **Namespace** : Metrics belong to namespaces. There's no default namespace. The AWS namespaces follow the naming convention like ```AWS/ec2```
-      * **Name** : e.g. mem_used_percent
-      * zero or more **Dimensions** : ```name/value``` pair that is part of the identity of a metric. You can assign up to **10** dimensions to a metric.
+  * Represents a **time-ordered** set of data points that are published to CloudWatch.
+  * It is the variable to monitor (CPUUtilization, NetworkIn…)
+  * Metrics cannot be **deleted** but they will automatically **expire** after 15 months if no new data is published to them. As new data comes in, data older than 15 months are dropped.
+  * Metrics are uniquely defined by:
 
-2. **Statistics**: Metric data **aggregations** over a specified period of time.
+  <div class="flashcard-container">
+  
+  {{< flashcard front="**Namespace**" >}}  
+  A namespace is a container for CloudWatch metrics.
+  {{< /flashcard >}}
+
+  {{< flashcard front="**Name**" >}}
+  Names are unique within a Namespace, e.g., CPUUtilization is distinct from DiskReadOps
+  {{< /flashcard >}}
+
+  {{< flashcard front="**Dimensions**" >}}
+  K-V pair that is part of the identity of a metric.
+  {{< /flashcard >}}
+
+  </div>
+
+  * Metrics, and their identifiers, can be listed using the AWS CLI tool and the AWS console.
+
+    ```bash
+      $ aws cloudwatch list-metrics --namespace AWS/EC2
+      {
+          "Metrics": [
+              {
+                  "Namespace": "AWS/EC2",
+                  "MetricName": "NetworkPacketsIn",
+                  "Dimensions": [
+                      {
+                          "Name": "InstanceId",
+                          "Value": "i-08d99a369f572dbdb"
+                      }
+                  ]
+              },
+      ...
+    ```
+
+  * **Namespace** : AWS namespaces typically use the naming convention ```AWS/service```. For example, AWS Lambda uses the ```AWS/Lambda``` namespace. The default namespace for metrics collected by the CloudWatch Agent is **CWAgent**. Metrics in different namespaces are isolated from each other.
+
+  * **Name** : Name of the Metric. e.g. mem_used_percent
+  
+  * **Dimensions** : A dimension is a K-V pair that is part of the identity of a metric. You can assign up to **30** dimensions to a metric. Each metric has specific characteristics that describe it. You can think of dimensions as categories for those characteristics.
+
+2. **Statistics**: Metric data **aggregations** over a specified period of time. 
+
+    For example we can calculate an **average** across all Data Points in five minute periods over the course of an hour for a ```CPU utilization``` Per-Instance Metric using the AWS CLI tool.
+
+    ```bash
+    $ aws cloudwatch get-metric-statistics \
+      --namespace AWS/EC2 \
+      --metric-name CPUUtilization \
+      --dimensions Name=InstanceId,Value=i-08d99a369f572dbdb \
+      --start-time 2020-08-11T16:00:00Z \
+      --end-time 2020-08-11T17:00:00Z \
+      --period 300 \
+      --statistics Average
+    {
+        "Label": "CPUUtilization",
+        "Datapoints": [
+            {
+                "Timestamp": "2020-08-11T16:30:00+00:00",
+                "Average": 0.0666666666666676,
+                "Unit": "Percent"
+            },
+    ...
+    ```
+    We get the same data using the Amazon CloudWatch service in the AWS Console:
+    ![Cloudwatch Statistics](/images/uploads/cloudwatch-statistics.png)
 
 3. **Custom Metrics**:
 
-    * Possibility to define and send your own custom metrics to CloudWatch
-    * Ability to use dimensions (attributes) to segment metrics like Instance.id, Environment.name
-    * Metric resolution (StorageResolution API parameter – two possible value):
+  * Possibility to define and send your own custom metrics to CloudWatch
+  * Ability to use dimensions (attributes) to segment metrics like Instance.id, Environment.Name
+  * Metric resolution (StorageResolution API parameter – two possible value):
+    * Standard: 1 minute (60 seconds)
+    * High Resolution: 1 second – Higher cost
+  * Use API call PutMetricData
+  * Use exponential back off in case of throttle errors
 
-      * Standard: 1 minute (60 seconds)
-      * High Resolution: 1 second – Higher cost
-    * Use API call PutMetricData
-    * Use exponential back off in case of throttle errors
+  Monitoring metrics with multiple dimensions in CloudWatch is a powerful way to gain deeper insights into the performance of your resources. For example, you could monitor the CPU utilization of your EC2 instances, broken down by instance type and availability zone. This would allow you to see which instance types and availability zones are experiencing the highest CPU utilization, and take action to address any issues.
 
-> AWS CloudWatch EC2 Detailed monitoring:
-> * EC2 instance metrics have metrics “every 5 minutes” by default
-> * With detailed monitoring (for a cost), you get data “every 1 minute”
-> * Use detailed monitoring if you want to more prompt scale your ASG!
-> * The AWS Free Tier allows us to have 10 detailed monitoring metrics
-> * Note: EC2 Memory usage is by default not pushed (must be pushed
+To monitor metrics with multiple dimensions in CloudWatch, you can use the put-metric-data command in the AWS CLI. This command allows you to specify the dimensions for your metric, as well as the value and the unit of measurement. Here is an example of how you could use the put-metric-data command to monitor the CPU utilization of your EC2 instances, broken down by instance type and availability zone:
+
+```bash
+aws cloudwatch put-metric-data \
+    --metric-name CPUUtilization \
+    --namespace EC2 \
+    --dimensions InstanceType=t2.micro,AvailabilityZone=us-east-1a \
+    --value 70 \
+    --unit Percent
+```
+
+{{% callout note %}}
+AWS CloudWatch EC2 Detailed monitoring:
+ * EC2 instance metrics have metrics “every 5 minutes” by default
+ * With detailed monitoring (for a cost), you get data “every 1 minute”
+ * Use detailed monitoring if you want to more prompt scale your ASG!
+ * The AWS Free Tier allows us to have 10 detailed monitoring metrics
+ * Note: EC2 Memory usage is by default not pushed (must be pushed
 from inside the instance as a custom metric)
+{{% /callout %}}
 
 6. **Alarms**: Watches a specific metric over a specified time period and performs a set of specified actions based on the value of the metric relative to a threshold.
 
@@ -129,6 +211,14 @@ from inside the instance as a custom metric)
   > * You need to run a CloudWatch agent on EC2 to push the log files you want
   > * Make sure IAM permissions are correct
   > * The CloudWatch log agent can be setup on-premises too
+
+CloudWatch agent can collect log files specified as an individual file or a group of files. It sends them to a log stream that uses the instance ID as the default name. The log stream is in a log group that you configure.
+ 
+![CloudWatch Agent Ec2](/images/uploads/cloudwatch-agent-ec2.png)
+
+For Amazon Elastic Container Service (Amazon ECS), deploy the CloudWatch agent as a **daemon task**. For Amazon Elastic Kubernetes Service (Amazon EKS) or Kubernetes, deploy the agent as a **daemon set**. For Amazon ECS on AWS Fargate deployment types, deploy the agent as a **sidecar**.
+
+![CloudWatch Agent ECS](/images/uploads/cloudwatch-agent-ecs.png)
 
   * CloudWatch Logs Agent & Unified Agent
     * For virtual servers (EC2 instances, on-premise servers…)
@@ -223,7 +313,7 @@ from inside the instance as a custom metric)
 
   ![X-Ray](/images/uploads/x-ray-graph.PNG)
 
-### X-Ray Concepts
+###### X-Ray Concepts
 
 1. X-Ray Leverages **Tracing**:
 

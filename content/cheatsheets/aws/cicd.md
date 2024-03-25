@@ -451,3 +451,6 @@ AWS CodePipeline is a **fully managed** continuous delivery service that enables
 ## CodeArtifact
 
 ## CodeGuru
+
+Amazon CodeGuru is a service that scans pull requests, gives a description of the issue, and recommends how to remediate it.
+CodeGuru uses program analysis and ```machine learning``` to scan code and detect potential defects that are difficult for developers to find on their own. 
