@@ -56,9 +56,17 @@ The things that you will need:
 
 - 👉 [Install VirtualBox](https://www.virtualbox.org/wiki/Downloads/)
 - 👉 [Download the DVD ISO Image](https://www.centos.org/download/)
+- 👉 [Virtualization turned on from BIOS/UEFI settings]()
+]
 
 {{% callout note %}}
-I'm working on a Windows 10 machine, so I used the CentOS-7-x86_64-DVD-2009.iso
+
+* I'm working on a Windows 10 machine, so I used the CentOS-7-x86_64-DVD-2009.iso
+* Minimum Requirements to Install CentOS 7 on VirtualBox
+  * 10GB minimum Storage, 20GB+ recommended.
+  * 2GB minimum RAM, 4GB+ recommended.
+  * Dual-Core Processor.
+
 {{% /callout %}}
 
 {{% stepper %}}
@@ -96,8 +104,12 @@ I'm working on a Windows 10 machine, so I used the CentOS-7-x86_64-DVD-2009.iso
   ![](/images/uploads/Centos-5.PNG)
   ![](/images/uploads/Centos-6.PNG)
   ![](/images/uploads/Centos-7.PNG)
+
   ![](/images/uploads/Centos-8.PNG)
-  ![](/images/uploads/Centos-9.PNG) 
+  ![](/images/uploads/virtualbox-nat.png)
+
+  ![](/images/uploads/Centos-9.PNG)
+  ![](/images/uploads/virtualbox-hostonly.png)
   
 </div>
 <div class="step">

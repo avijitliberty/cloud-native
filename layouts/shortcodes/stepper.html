@@ -3,12 +3,14 @@
   <div class="stepper-progress">
     <div class="stepper-progress-bar" id="progress-bar"></div>
   </div>
-  <div class="stepper-steps">
-    {{ .Inner | markdownify }}
-  </div>
   <div class="stepper-controls">
     <button class="btn btn-primary" id="prevBtn" onclick="prevStep()">Previous</button>
     <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Next</button>
+    <button class="btn btn-success" id="doneBtn" style="display:none;" onclick="done()">Done</button>
+  </div>
+  
+  <div class="stepper-steps">
+    {{ .Inner | markdownify }}
   </div>
 </div>
 
@@ -29,14 +31,16 @@
 
     // Update visibility of navigation buttons
     if (n === 0) {
-      document.getElementById("prevBtn").disabled = true;
+      document.getElementById("prevBtn").style.display = "none";
     } else {
-      document.getElementById("prevBtn").disabled = false;
+      document.getElementById("prevBtn").style.display = "inline";
     }
     if (n === steps.length - 1) {
-      document.getElementById("nextBtn").innerHTML = "Submit";
+      document.getElementById("nextBtn").style.display = "none";
+      document.getElementById("doneBtn").style.display = "inline";
     } else {
-      document.getElementById("nextBtn").innerHTML = "Next";
+      document.getElementById("nextBtn").style.display = "inline";
+      document.getElementById("doneBtn").style.display = "none";
     }
   }
 
@@ -46,9 +50,9 @@
       currentStep++;
       showStep(currentStep);
     } else {
-      // Handle form submission or any other action on the final step
-      // For now, let's just alert a message
-      alert("Form submitted!");
+      // Hide next button and display done button
+      document.getElementById("nextBtn").style.display = "none";
+      document.getElementById("doneBtn").style.display = "inline";
     }
   }
 
@@ -57,5 +61,9 @@
       currentStep--;
       showStep(currentStep);
     }
+  }
+
+  function done() {
+    console.log("Stepper completed!");
   }
 </script>
