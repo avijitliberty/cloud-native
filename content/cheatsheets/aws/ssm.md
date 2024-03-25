@@ -20,43 +20,6 @@ Automate Your Infrastructure
 
 ![SSM Overview](/images/uploads/ssm-overview.png)
 
-<div class="flashcard-container">
-  
-  {{< flashcard front="Front markdown content 1" >}}  
-  * Line 1 uuhuhu nuuhuh
-  * Line 2 jbbyubyb nibuhbu
-  {{< /flashcard >}}
-
-  {{< flashcard front="Front markdown content 2" >}}
-  * Back markdown content 2
-  * https://docs.aws.amazon.com/cdk/api/v2/
-  {{< /flashcard >}}
-
-  {{< flashcard front="Front markdown content 3" >}}
-  Back markdown content 3
-  {{< /flashcard >}}
-
-  {{< flashcard front="Front markdown content 4" >}}
-  Back markdown content 4
-  {{< /flashcard >}}
-
-  {{< flashcard front="Front markdown content 4" >}}
-  Back markdown content 4
-  {{< /flashcard >}}
-
-  {{< flashcard front="Front markdown content 4" >}}
-  Back markdown content 4
-  {{< /flashcard >}}
-
-  {{< flashcard front="Front markdown content 4" >}}
-  Back markdown content 4
-  {{< /flashcard >}}
-
-
-  <!-- Add more flashcards as needed -->
-</div>
-
-
 
 
 

@@ -61,45 +61,60 @@ The things that you will need:
 I'm working on a Windows 10 machine, so I used the CentOS-7-x86_64-DVD-2009.iso
 {{% /callout %}}
 
-### Step 1:
+{{% stepper %}}
+<div class="step">
+  
+  ## Step 1:
+  Install VirtualBox and open it.
+  - First make sure you do have a host network created. Also make a note of the IPv4 address and the Subnet mask. If none exists by default create one here:
+  ![Host Network](/images/uploads/Centos-1.PNG)
 
-Install VirtualBox and open it.
-- First make sure you do have a host network created. Also make a note of the IPv4 address and the Subnet mask. If none exists by default create one here:
-![Host Network](/images/uploads/Centos-1.PNG)
+</div>
+<div class="step">
 
-### Step2:
+  ## Step2:
+  - Select the Linux and then Red Hat, since CentOS is the clone of Red Hat and uses a similar architecture.
+  - Set the memory size to 4GB.
+  - Select "Create a Virtual Hard Disk"
+    ![](/images/uploads/Centos-2.PNG)
 
-- Select the Linux and then Red Hat, since CentOS is the clone of Red Hat and uses a similar architecture.
-- Set the memory size to 4GB.
-- Select "Create a Virtual Hard Disk"
-  ![](/images/uploads/Centos-2.PNG)
-
-### Step3:
-
-- Set your desired hard disk size and type and create:
+</div>
+<div class="step">
+  
+  ## Step3:
+  - Set your desired hard disk size and type and create:
   ![](/images/uploads/Centos-3.PNG)
 
-### Step4:
+</div>
+<div class="step">
+  
+  ## Step4:
 
-Now we will change some of the settings for the VM. Some of them maybe optional for all use cases but these were the ones I did.
+  Now we will change some of the settings for the VM. Some of them maybe optional for all use cases but these were the ones I did.
 
   ![](/images/uploads/Centos-4.PNG)
   ![](/images/uploads/Centos-5.PNG)
   ![](/images/uploads/Centos-6.PNG)
   ![](/images/uploads/Centos-7.PNG)
   ![](/images/uploads/Centos-8.PNG)
-  ![](/images/uploads/Centos-9.PNG)  
+  ![](/images/uploads/Centos-9.PNG) 
+  
+</div>
+<div class="step">
+  
+  ## Step5:
 
-### Step5:
+  Now we would start the VMs and it would pick the DVD.iso image and start the installation. The installer has a GUI which would pretty much walk you through the respective steps.
+    ![](/images/uploads/Centos-10.PNG)
+    ![](/images/uploads/Centos-11.PNG)
+    ![](/images/uploads/Centos-12.PNG)
+  
+</div>
+<div class="step">
+  
+  ## Step6:
 
-Now we would start the VMs and it would pick the DVD.iso image and start the installation. The installer has a GUI which would pretty much walk you through the respective steps.
-  ![](/images/uploads/Centos-10.PNG)
-  ![](/images/uploads/Centos-11.PNG)
-  ![](/images/uploads/Centos-12.PNG)
-
-### Step6:
-
-We would need to make sure the machine would have internet connectivity and a static IP. These settings needs to be set at this step. The installer has this weird setting to have the internet adaptors turned off by default. Make sure you turn it on here:
+  We would need to make sure the machine would have internet connectivity and a static IP. These settings needs to be set at this step. The installer has this weird setting to have the internet adaptors turned off by default. Make sure you turn it on here:
 
   ![](/images/uploads/Centos-13.PNG)
   ![](/images/uploads/Centos-14.PNG)
@@ -115,8 +130,14 @@ We would need to make sure the machine would have internet connectivity and a st
   ![](/images/uploads/Centos-25.PNG)
   ![](/images/uploads/Centos-26.PNG)        
   ![](/images/uploads/Centos-27.PNG)  
-  ![](/images/uploads/Centos-28.PNG)  
+  ![](/images/uploads/Centos-28.PNG) 
+  
+</div>
+<div class="step">
+  
+  ## Step7:
 
-### Step7:
-
-Install Guest Additions:
+  Install Guest Additions: 
+  
+</div>
+{{% /stepper %}}

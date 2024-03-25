@@ -1,0 +1,61 @@
+{{/* layouts/shortcodes/stepper.html */}}
+<div class="stepper">
+  <div class="stepper-progress">
+    <div class="stepper-progress-bar" id="progress-bar"></div>
+  </div>
+  <div class="stepper-steps">
+    {{ .Inner | markdownify }}
+  </div>
+  <div class="stepper-controls">
+    <button class="btn btn-primary" id="prevBtn" onclick="prevStep()">Previous</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Next</button>
+  </div>
+</div>
+
+<script>
+  var currentStep = 0;
+  showStep(currentStep);
+
+  function showStep(n) {
+    var steps = document.getElementsByClassName("step");
+    var progressBar = document.getElementById("progress-bar");
+    var stepWidth = 100 / steps.length;
+    progressBar.style.width = stepWidth * (n + 1) + "%";
+
+    for (var i = 0; i < steps.length; i++) {
+      steps[i].style.display = "none";
+    }
+    steps[n].style.display = "block";
+
+    // Update visibility of navigation buttons
+    if (n === 0) {
+      document.getElementById("prevBtn").disabled = true;
+    } else {
+      document.getElementById("prevBtn").disabled = false;
+    }
+    if (n === steps.length - 1) {
+      document.getElementById("nextBtn").innerHTML = "Submit";
+    } else {
+      document.getElementById("nextBtn").innerHTML = "Next";
+    }
+  }
+
+  function nextStep() {
+    var steps = document.getElementsByClassName("step");
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      showStep(currentStep);
+    } else {
+      // Handle form submission or any other action on the final step
+      // For now, let's just alert a message
+      alert("Form submitted!");
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 0) {
+      currentStep--;
+      showStep(currentStep);
+    }
+  }
+</script>
