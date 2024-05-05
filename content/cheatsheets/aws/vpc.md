@@ -170,8 +170,72 @@ An elastic network interface is a logical networking component in a VPC that rep
 
 ## VPC Endpoint
 
-![S3 Access Inside VPC](/images/uploads/private-ec2-s3-access.png)
-![S3 Access via VPC Endpoint](/images/uploads/private-ec2-s3-vpc-endpoint.png)
+If we attempt to access a S3 bucket ( or any other **global** AWS service) from within a private subnet in a VPC, we could not do that directly since there's no internet connectivity. We could solve this in a naive way by going via:
+
+```EC2``` ➡️ ```NAT Gateway``` ➡️ ```Internet Gateway``` ➡️ 🌎 ➡️ ```S3``` and then the same way back. 
+![S3 Access via Nat](/images/uploads/private-ec2-s3-access.png)
+
+{{< figure src="images/uploads/a-b-path.jpg" class="alignright">}}
+
+It almost seems like going from A ➡️ B via a detour.
+
+Issues with this approach:
+- **Expensive**: Nat Gateways are 💰 and charged per hour.
+- **Security**: Traffic is going out of the VPC and AWS Cloud and coming back.
+
+This is the problem the ```VPC Endpoint``` would tend to solve.
+
+A VPC endpoint is a **virtual** scalable networking component you create in a VPC and use as a private entry point to supported AWS services and third-party applications. Currently, two types of VPC endpoints can be used to connect to Amazon S3: ```Interface``` VPC endpoint and ```Gateway``` VPC endpoint. In both scenarios, the communications between the service consumer and the service provider never gets out of the AWS network.
+
+{{< tabs name="VPC Endpoint" >}}
+{{% tab name="Gateway Endpoint" %}}
+![VPC Gateway Endpoint](/images/uploads/vpc-gateway-endpoint.png)
+* The gateway endpoint is created at the ```VPC``` level. 
+* We need to attach an endpoint policy to the Gateway endpoint that allow access to the S3 service and also specify a ```route``` in the route table in subnet 10.18.0.0 so the EC2 instance can find a path to the S3 bucket.
+* VPC Endpoint policy and Resource-based policies can be used for fine-grained access control i.e which bucket, read/write access...
+* Only supports ```S3``` and ```DynamoDB```.
+* The biggest benefit for me is that it is 🆓. Your S3 or DynamoDB Traffic are not billed if ```Gateway Endpoint``` is used. 
+
+{{% /tab %}}
+{{% tab name="Interface Endpoint" %}}
+![VPC Interface Endpoint](/images/uploads/vpc-interface-endpoint.png)
+* When you create a Interface Endpoint, it creates an ```ENI``` in your ```private subnet``` and assign it a **private IP** address from the subnet address range.
+* VPC Interface endpoints enable connectivity to services powered by AWS ```PrivateLink```. Services include AWS services like CloudTrail, CloudWatch, etc., services hosted by other AWS customers and partners in their own VPCs (referred to as ```Endpoint Services```), and supported AWS Marketplace partner services.
+* Interface Endpoints can be used to create custom applications in VPC and configure them as an AWS PrivateLink-powered service (referred to as an endpoint service) exposed through a ```Network Load Balancer```.
+* You would need to associate a ```Security Group``` around a Interface Endpoint. Also the EC2 Instance would have a Security Group associated. Then all we got to do is:
+  - On the VPC Endpoint Security Group Allow **INBOUND** from EC2 Security Group.
+  - On the EC2 Security Group Allow **OUTBOUND** to the VPC Endpoint Security Group
+* Interface Endpoints only allow traffic from VPC resources to the endpoints and not vice versa.
+* PrivateLink endpoints can be accessed across both intra- and inter-region VPC peering connections, Direct Connect, and VPN connections.
+* VPC Interface Endpoints, by default, have an address like **vpce-svc-01234567890abcdef.us-east-1.vpce.amazonaws.com** which needs application changes to point to the service.
+* Majority of AWS services can be privately connected through ```Interface Endpoint```.
+* You are billed🧾 for **hourly** usage and data processing charges. 
+
+{{% /tab %}}
+{{< /tabs >}}
+
+###### S3 VPC Endpoints Strategy
+
+S3 is accessible with both ```Gateway Endpoints``` and ```Interface Endpoints```. Here's a mind map to help you decide based on your architecture needs:
+
+| **S3 Gateway Endpoints**                      | **S3 Interface Endpoints**                                 |
+|-----------------------------------------------|------------------------------------------------------------|
+| Network traffic remains on the AWS network\.  | Network traffic remains on the AWS network\.               |
+| Uses Amazon S3 public IP addresses            | Uses private IP addresses from the VPC to access Amazon S3 |
+| Does not allow access from on\-premises       | Allows access from on\-premises                            |
+| Does not allow access from another AWS Region | Allow access from a VPC in another AWS Region using VPC peering or AWS Transit Gateway         |
+| Free                                          | Billed per hour                                            |
+
+
+
+{{% callout note %}}
+With VPC Endpoints you do need to allow VPC ```DNS HostName``` resolution, otherwise this solution won't work.
+{{% /callout %}}
+
+
+
+
+
 
 
 
