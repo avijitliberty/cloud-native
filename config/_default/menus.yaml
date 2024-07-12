@@ -48,6 +48,10 @@ main:
     url: '/cheatsheets/serverless/'
     parent: cheatsheets
     weight: 120
+  - name: OpenAI
+    url: '/cheatsheets/openai/'
+    parent: cheatsheets
+    weight: 130
   - name: 📐Projects
     url: '#projects'
     weight: 30

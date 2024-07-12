@@ -168,6 +168,11 @@ sections:
           icon_pack: "custom"
           name: "GraphQL"
           url: /cheatsheets/graphql
+        - description: 
+          icon: "chatgpt"
+          icon_pack: "custom"
+          name: "OpenAI"
+          url: /cheatsheets/openai
     design:
     # Choose how many columns the section has. Valid values: 1 or 2.
       columns: "1"
