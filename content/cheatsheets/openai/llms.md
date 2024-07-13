@@ -31,7 +31,7 @@ Large language models (**LLMs**) are a type of ```Generative AI``` that are trai
 
 LLMs are a rapidly developing area of Al research, and they are being used to power a wide range of new and innovative applications. As LLMs ontinue to improve, they are likely to play an even greater role in the future of Al.
 
-###### ChatGPT Vs Gemini
+## ChatGPT Vs Gemini
 
 [ChatGPT](https://openai.com/chatgpt/) and [Gemini]() are both large language models (LLMs) trained to generate human-quality text. They have access to a massive amount of text data, which allows them to generate text that is both coherent and informative.
 
@@ -44,4 +44,42 @@ code, scripts, musical pieces, email, letters, etc., while Gemini is better at p
 | Strengths     | Generating creative text formats                            | Providing summaries of factual topics or creating different kinds of creative text formats |
 | Weaknesses    | Can sometimes generate inaccurate or misleading information | May not be as creative as ChatGPT |
 
-Learn more: [API Reference](https://platform.openai.com/docs/api-reference/models)
+## Custom GPTs
+
+You can now create custom versions of ChatGPT that combine instructions, extra knowledge, and any combination of skills.
+ 
+* GPTs let you customise ChatGPT for a specific purpose
+* The best GPTs will be invented by the community
+* GPTs have been built "with privacy and safety in mind"
+* Developers can connect GPTs to the real world
+* Enterprise customers can deploy internal-only GPTs
+
+## GPT Plugins
+
+[ChatGPT Plugins](https://openai.com/index/chatgpt-plugins/)
+
+
+| **Feature**              | **Custom GPTs**                                                               | **GPT Plugins**                                                                             |
+|--------------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| Creation Process         | No\-code, built within ChatGPT using instructions and examples                | Code\-based, built outside ChatGPT using OpenAI API                                         |
+| Technical Skill Required | Minimal                                                                       | Programming knowledge and API understanding<br>                                             |
+| Focus                    | Specific niche domains or skills                                              | Broad and diverse capabilities, including external<br>integrations                          |
+| Strengths                | Easy to build, quick prototyping, highly specialized<br>                      | Powerful and versatile, more control over functionality,<br>access to external resources    |
+| Weaknesses               | Limited functionality, less control over code, no external<br>data/API access | Time\-consuming development, technical expertise<br>required, compatibility issues possible |
+| Examples                 | Code GPT for Python, Poetry GPT, Customer Service<br>Assistant GPT            | ChatGPT Translate Plugin, Dall\-E 3 integration, Financial<br>Analysis Plugin               |
+| Development Time         | Minutes to hours<br>                                                          | Hours to days \(depending on complexity\)<br>                                               |
+| Cost                     | Free within ChatGPT limitations                                               | Varies depending on plugin and hosting                                                      |
+| Suitable for             | Non technical users wanting quicn customizaton, niche                         | Power users seeking extensive functionality, complex                                        |
+
+{{% callout note %}}
+
+Ultimately, the choice between custom GPTs and plugins depends on your needs and technical skills. 
+* 👉 If you want a ```quick``` and ```easy``` way to focus ChatGPT on a specific area, **custom GPTs** are a good option. 
+* 👉 If you need more ```power``` and ```flexibility``` for complex tasks, learning to build **plugins** gives you greater control and possibilities.
+
+{{% /callout %}}
+
+Learn more: 
+* [📖 API Reference](https://platform.openai.com/docs/api-reference/models)
+* [🧠 Awesome ChatGPT Prompts](https://prompts.chat/)
+* [🥳 PartyRock](https://partyrock.aws)
