@@ -15,6 +15,7 @@ weight: 10
 
 ###### Artificial Intelligence
 AI is when machines learn, think, and do things that usually need human intelligence. It's like having a robot assistant that can help you!
+Simply put AI is a computer program that can learn, think, and make decisions like a **human** 🧠. Using data and algorithms to solve problems and improve over time using feedback loops.➿
 
 ###### Generative Al
 Generative Al refers to Artificial Intelligence that can generate ```new content or data``` that resembles **human-generated** examples.
@@ -30,15 +31,17 @@ Large language models (**LLMs**) are a type of ```Generative AI``` that are trai
 
 LLMs are a rapidly developing area of Al research, and they are being used to power a wide range of new and innovative applications. As LLMs ontinue to improve, they are likely to play an even greater role in the future of Al.
 
-## ChatGPT Vs Gemini
+###### ChatGPT Vs Gemini
 
 [ChatGPT](https://openai.com/chatgpt/) and [Gemini]() are both large language models (LLMs) trained to generate human-quality text. They have access to a massive amount of text data, which allows them to generate text that is both coherent and informative.
 
 However, there are some key differences between the two models. ChatGPT is a generative pre-trained transformer model, while Gemini is a factual language model. This means that ChatGPT is better at generating creative text formats, like poems,
 code, scripts, musical pieces, email, letters, etc., while Gemini is better at providing summaries of factual topics or creating different kinds of creative text formats.
 
-| **Feature**   | **ChatGPT**                                                 | **Gemini**                                                                                 |
+| **Feature**   | **ChatGPT**                                             | **Gemini**                                                                                 |
 |---------------|-------------------------------------------------------------|--------------------------------------------------------------------------------------------|
 | Type of model | Generative pre\-trained transformer                         | Factual language model                                                                     |
 | Strengths     | Generating creative text formats                            | Providing summaries of factual topics or creating different kinds of creative text formats |
 | Weaknesses    | Can sometimes generate inaccurate or misleading information | May not be as creative as ChatGPT |
+
+Learn more: [API Reference](https://platform.openai.com/docs/api-reference/models)
