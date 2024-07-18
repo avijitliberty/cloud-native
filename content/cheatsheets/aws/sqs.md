@@ -1,6 +1,6 @@
 ---
 title: SQS
-linktitle: SQS
+linktitle: 📨 SQS
 type: book
 tags:
   - AWS

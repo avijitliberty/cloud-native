@@ -1,6 +1,6 @@
 ---
 title: VPC
-linktitle: VPC
+linktitle: 🛡️ VPC
 type: book
 tags:
   - AWS

@@ -1,6 +1,6 @@
 ---
 title: Observability
-linktitle: Observability
+linktitle:  📈 Observability
 type: book
 tags:
   - AWS

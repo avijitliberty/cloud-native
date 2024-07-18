@@ -1,6 +1,6 @@
 ---
 title: Security
-linktitle: Security
+linktitle: 🗝️ Security
 type: book
 tags:
   - AWS

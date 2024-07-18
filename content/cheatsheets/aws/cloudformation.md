@@ -1,6 +1,6 @@
 ---
 title: CloudFormation
-linktitle: CloudFormation
+linktitle: 📜 CloudFormation
 type: book
 tags:
   - AWS

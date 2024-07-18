@@ -1,6 +1,6 @@
 ---
 title: AWS CLI
-linktitle: CLI
+linktitle: ⌨️ CLI
 type: book
 tags:
   - AWS

@@ -1,6 +1,6 @@
 ---
 title: Caching
-linktitle: Caching
+linktitle: 💾 Caching
 type: book
 tags:
   - AWS

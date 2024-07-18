@@ -1,6 +1,6 @@
 ---
 title: IAM
-linktitle: IAM
+linktitle: 🔐 IAM
 type: book
 tags:
   - AWS

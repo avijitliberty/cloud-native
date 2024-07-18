@@ -1,6 +1,6 @@
 ---
 title: CDK
-linktitle: CDK
+linktitle: 🏗️ CDK
 type: book
 tags:
   - AWS

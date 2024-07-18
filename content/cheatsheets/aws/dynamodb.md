@@ -1,6 +1,6 @@
 ---
 title: DynamoDB
-linktitle: DynamoDB
+linktitle: 🧩 DynamoDB
 type: book
 tags:
   - AWS

@@ -1,6 +1,6 @@
 ---
 title: Systems Manager
-linktitle: Systems Manager
+linktitle: ⚙️ Systems Manager
 type: book
 tags:
   - AWS

@@ -1,6 +1,6 @@
 ---
 title: Route53
-linktitle: Route53
+linktitle: 🛣️ Route53
 type: book
 tags:
   - AWS

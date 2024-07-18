@@ -1,6 +1,6 @@
 ---
 title: ECS
-linktitle: ECS
+linktitle: ☸️ ECS
 type: book
 tags:
   - AWS

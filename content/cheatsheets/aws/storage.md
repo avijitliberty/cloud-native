@@ -1,6 +1,6 @@
 ---
 title: Storage
-linktitle: Storage
+linktitle: 🗄️ Storage
 type: book
 tags:
   - AWS

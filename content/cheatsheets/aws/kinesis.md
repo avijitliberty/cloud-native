@@ -1,6 +1,6 @@
 ---
 title: Kinesis
-linktitle: Kinesis
+linktitle: 🔀 Kinesis
 type: book
 tags:
   - AWS

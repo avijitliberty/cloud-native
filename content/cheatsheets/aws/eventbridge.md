@@ -1,6 +1,6 @@
 ---
 title: EventBridge
-linktitle: EventBridge
+linktitle: 🛜 EventBridge
 type: book
 tags:
   - AWS
