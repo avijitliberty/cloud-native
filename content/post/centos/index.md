@@ -48,7 +48,7 @@ categories:
 
 As part of my upcoming HowTo tutorials on my blog, I will need to install CentOS 7 on a virtualbox. My goal would be to assign a static IP for these machines and use them as Docker hosts.
 
-For those who may not know this, VirtualBox is a free, open source cross platform hypervisor software that allows users to run multiple operating systems from within a single machine. In other words, you can spin up multiple virtual machines of any desired OS within minutes of each other as long as the underlining machine spec can handle the load.
+For those who may not know this, ```VirtualBox``` is a 🆓, open source cross platform hypervisor software that allows users to run multiple operating systems from within a single machine. In other words, you can spin up multiple virtual machines of any desired OS within minutes of each other as long as the underlining machine spec can handle the load.
 
 ### Get Started
 
@@ -56,8 +56,8 @@ The things that you will need:
 
 - 👉 [Install VirtualBox](https://www.virtualbox.org/wiki/Downloads/)
 - 👉 [Download the DVD ISO Image](https://www.centos.org/download/)
-- 👉 [Virtualization turned on from BIOS/UEFI settings]()
-]
+- 👉 [Virtualization turned on from BIOS/UEFI settings](https://learn.microsoft.com/en-us/windows/wsl/install-manual#step-3---enable-virtual-machine-feature)
+
 
 {{% callout note %}}
 
