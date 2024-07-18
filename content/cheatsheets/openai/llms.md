@@ -1,6 +1,6 @@
 ---
-title: Intro to Large Language Models
-linktitle: Intro to LLMs
+title: 🔠 Large Language Models
+linktitle: 🔠 Large Language Models
 type: book
 date: "2024-06-17T00:00:00+01:00"
 tags:

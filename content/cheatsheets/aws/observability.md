@@ -95,11 +95,15 @@ Overall all together these 3 technologies give you a solid foundation to observa
       ...
     ```
 
-  * **Namespace** : AWS namespaces typically use the naming convention ```AWS/service```. For example, AWS Lambda uses the ```AWS/Lambda``` namespace. The default namespace for metrics collected by the CloudWatch Agent is **CWAgent**. Metrics in different namespaces are isolated from each other.
+  * **Namespace** : AWS namespaces typically use the naming convention ```AWS/service```. For example, AWS Lambda uses the ```AWS/Lambda``` namespace. Metrics in different namespaces are isolated from each other.
+
+  {{< figure src="images/uploads/cloudwatch-namespaces.png" width="500" height="500">}}
 
   * **Name** : Name of the Metric. e.g. mem_used_percent
   
   * **Dimensions** : A dimension is a K-V pair that is part of the identity of a metric. You can assign up to **30** dimensions to a metric. Each metric has specific characteristics that describe it. You can think of dimensions as categories for those characteristics.
+
+  {{< figure src="images/uploads/cloudwatch-dimensions.png" width="500" height="500">}}
 
 2. **Statistics**: Metric data **aggregations** over a specified period of time. 
 
@@ -129,7 +133,7 @@ Overall all together these 3 technologies give you a solid foundation to observa
 
 3. **Custom Metrics**:
 
-  * Possibility to define and send your own custom metrics to CloudWatch
+  * You can define and send your own custom metrics to CloudWatch
   * Ability to use dimensions (attributes) to segment metrics like Instance.id, Environment.Name
   * Metric resolution (StorageResolution API parameter – two possible value):
     * Standard: 1 minute (60 seconds)
@@ -156,8 +160,7 @@ AWS CloudWatch EC2 Detailed monitoring:
  * With detailed monitoring (for a cost), you get data “every 1 minute”
  * Use detailed monitoring if you want to more prompt scale your ASG!
  * The AWS Free Tier allows us to have 10 detailed monitoring metrics
- * Note: EC2 Memory usage is by default not pushed (must be pushed
-from inside the instance as a custom metric)
+ * Note: EC2 Memory usage is by default not pushed (must be pushed from inside the instance as a custom metric)
 {{% /callout %}}
 
 6. **Alarms**: Watches a specific metric over a specified time period and performs a set of specified actions based on the value of the metric relative to a threshold.
@@ -299,6 +302,11 @@ For Amazon Elastic Container Service (Amazon ECS), deploy the CloudWatch agent a
     * Custom Event buses: for your own applications
     * Event buses can be accessed by other AWS accounts
     * Rules: how to process the events (similar to CloudWatch Events)
+
+11. **Dashboards**:
+
+    * CloudWatch dashboards are customizable home pages in the CloudWatch console that you can use to monitor resources in a single view, even those resources that are spread across different Regions. 
+    * You can use CloudWatch dashboards to create customized views of the metrics and alarms for your AWS resources.
 
 ## X-Ray
 
@@ -464,21 +472,19 @@ For Amazon Elastic Container Service (Amazon ECS), deploy the CloudWatch agent a
 * Can put logs from CloudTrail into CloudWatch Logs
 * If a resource is deleted in AWS, look👀 into CloudTrail first!
 
-##  CloudWatch vs X-Ray vs CloudTrail
-
-* **CloudWatch**
-
-  * CloudWatch Metrics over time for monitoring
-  * CloudWatch Logs for storing application log
-  * CloudWatch Alarms to send notifications in case of unexpected metrics
-
-* **X-Ray**
-
-  * Automated Trace Analysis & Central Service Map Visualization
-  * Latency, Errors and Fault analysis
-  * Request tracking across distributed systems
-
-* **CloudTrail**
-
-  * Audit API calls made by users / services / AWS console
-  * Useful to detect unauthorized calls or root cause of changes
+{{< tabs name="CloudWatch vs X-Ray vs CloudTrail" >}}
+{{% tab name="CloudWatch" %}}
+* CloudWatch Metrics over time for monitoring
+* CloudWatch Logs for storing application log
+* CloudWatch Alarms to send notifications in case of unexpected metrics
+{{% /tab %}}
+{{% tab name="X-Ray" %}}
+* Automated Trace Analysis & Central Service Map Visualization
+* Latency, Errors and Fault analysis
+* Request tracking across distributed systems
+{{% /tab %}}
+{{% tab name="CloudTrail" %}}
+* Audit API calls made by users / services / AWS console
+* Useful to detect unauthorized calls or root cause of changes
+{{% /tab %}}
+{{< /tabs >}}
