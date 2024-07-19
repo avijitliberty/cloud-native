@@ -1,6 +1,6 @@
 ---
 title: CICD
-linktitle: 🔄 CICD
+linktitle: ♾️ CICD
 type: book
 tags:
   - AWS

@@ -1,9 +1,9 @@
 ---
-title: Transform Your Deployment Strategy
-subtitle: The Ultimate Guide to Crafting a DevOps <span style="color:blue">Blue</span>/<span style="color:green">Green</span> Pipeline with Amazon ECS!
+title: Unlock the Power of OpenAI in Google Spreadsheets
+subtitle: The Ultimate Beginner's Guide to Boosting Your Data Game!
 
 # Summary for listings and search engines
-summary: The Ultimate Guide to Crafting a DevOps <span style="color:blue">Blue</span>/<span style="color:green">Green</span> Pipeline with Amazon ECS!
+summary: The Ultimate Beginner's Guide to Boosting Your Data Game!
 
 # Link this post with a project
 projects: []
@@ -14,7 +14,7 @@ date: "2024-01-16T00:00:00Z"
 toc: true
 
 # Date updated
-lastmod: "2024-01-16T00:00:00Z"
+lastmod: "2024-07-19T00:00:00Z"
 
 # Is this an unpublished draft?
 draft: false
@@ -34,9 +34,8 @@ authors:
 - admin
 
 tags:
-- ECS
-- CICD
-- AWS
+- Spreadsheet
+- AI
 
 categories:
 

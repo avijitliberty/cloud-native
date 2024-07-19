@@ -1,5 +1,5 @@
 ---
-title: Creating API with OpenAPI and AWS SAM
+title: Using AWS Config and CloudTrail
 subtitle:
 
 # Summary for listings and search engines
@@ -9,12 +9,12 @@ summary:
 projects: []
 
 # Date published
-date: "2024-01-16T00:00:00Z"
+date: "2024-03-17T00:00:00Z"
 
 toc: true
 
 # Date updated
-lastmod: "2024-01-16T00:00:00Z"
+lastmod: "2024-03-17T00:00:00Z"
 
 # Is this an unpublished draft?
 draft: true
@@ -34,9 +34,9 @@ authors:
 - admin
 
 tags:
-- SAM
-- Serverless
-- Open-API
+- Config
+- AWS
+- Obervability
 
 categories:
 

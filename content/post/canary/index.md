@@ -1,9 +1,9 @@
 ---
-title: Building CI/CD pipelines for lambda canary deployments
-subtitle:
+title: Kickstart Your DevOps Journey
+subtitle: Guide to Building CI/CD Pipelines for Lambda Canary Deployments!
 
 # Summary for listings and search engines
-summary:
+summary: Guide to Building CI/CD Pipelines for Lambda Canary Deployments!
 
 # Link this post with a project
 projects: []
@@ -17,7 +17,7 @@ toc: true
 lastmod: "2024-01-16T00:00:00Z"
 
 # Is this an unpublished draft?
-draft: true
+draft: false
 
 # Show this page in the Featured widget?
 featured: false
