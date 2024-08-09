@@ -45,7 +45,7 @@ categories:
 
 ### Overview
 
-Imagine🤔 this: It's a **Friday** and have coded a complicated functionality but there's no one around to review your code. Until next week! What if there was a programmer buddy who could take a look, every time you pushed code into GitHub, scans your code, highlights potential issues, suggests improvements, and even points out best practices. It's like having a second set of eyes👀 – but those eyes never get tired or miss a detail.
+Imagine🤔 this: It's Friday afternoon, and you've just finished coding a complex piece of functionality. However, your teammates have already signed off for the weekend, leaving your code unreviewed until next week.  What if there was a programmer buddy who could take a look, every time you pushed code into GitHub, scans your code, highlights potential issues, suggests improvements, and even points out best practices. It's like having a second set of eyes👀 – but those eyes never get tired or miss a detail.
 
 As a developer👨‍💻, you’re no stranger to the grind of code reviews. They're crucial but can drain your time and energy. What if you could elevate your code review process, making it ```faster```, ```smarter```, and more ```consistent``` without sacrificing ```quality```? Meet the game-changing duo: OpenAI-powered code reviews via GitHub Actions. 
 
