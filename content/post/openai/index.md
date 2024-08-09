@@ -45,7 +45,7 @@ categories:
 
 ### Overview
 
-So, picture🖼️ this: you’re staring🫣 at a mountain of data in your Google Spreadsheet. It's like being lost in a forest with numbers🔢 as your only companions. Now, what if there was a nifty way to turn those cold, hard numbers into a lively conversation? Enter OpenAI🥁 Your Digital Conversationalist🤓
+So, picture🖼️ this: you’re scared🫣 looking at a mountain of data in your Google Spreadsheet. It's like being lost in a forest with numbers🔢 as your only companions. Now, what if there was a nifty way to turn those cold, hard numbers into a lively conversation? Enter OpenAI🥁 Your Digital Conversationalist🤓
 
 Integrating ```OpenAI``` with ```Google Spreadsheets``` opens up a realm of possibilities for automating and enhancing data tasks. By leveraging the capabilities of the OpenAI API, users can streamline data analysis, automate repetitive tasks, and gain deeper insights directly within their familiar spreadsheet environment.
 
@@ -232,6 +232,6 @@ The prompt reads:
 
 > You are an experienced content writer with high levels of expertise and authority. Your job is to write content that will be published online on websites. [Your writing style is friendly, conversational using informal grammar and sometimes non-standard English - as if you're talking to a friend, while incorporating rhetorical questions, storytelling, metaphors and analogies.] I will provide you with a topic or series of topics and you will come up with engaging and educational copy for this topic.
 
-With this OpenAI + Google Sheets integration, you can automate **repetitive** writing tasks, **summarise** information, **plot graphs**, **statistical analysis**...the posibilities are endless.🛣️
+With this OpenAI + Google Sheets integration, you can automate **repetitive** writing tasks, **summarise** information, **plot graphs**, **statistical analysis**...the posibilities are endless.
 
 Ready to bring these two powerhouses together? Let’s make data fun **again!** 
