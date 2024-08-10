@@ -47,7 +47,7 @@ categories:
 
 Imagine🤔 this: It's Friday afternoon, and you've just finished coding a complex piece of functionality. However, your teammates have already signed off for the weekend, leaving your code unreviewed until next week.  What if there was a programmer buddy who could take a look, every time you pushed code into GitHub, scans your code, highlights potential issues, suggests improvements, and even points out best practices. It's like having a second set of eyes👀 – but those eyes never get tired or miss a detail.
 
-As a developer👨‍💻, you’re no stranger to the grind of code reviews. They're crucial but can drain your time and energy. What if you could elevate your code review process, making it ```faster```, ```smarter```, and more ```consistent``` without sacrificing ```quality```? Meet the game-changing duo: OpenAI-powered code reviews via GitHub Actions. 
+What if you could elevate your code review process, making it ```faster```, ```smarter```, and more ```consistent``` without sacrificing ```quality```? Meet the game-changing duo: OpenAI-powered code reviews via GitHub Actions. 
 
 We’ll take an **MVP** approach (```Minimum Viable Product```) of our GitHub Action with only the required parts to understand the basics, then we’ll add more functionality to it.
 
@@ -155,7 +155,7 @@ The things that you will need:
     ```sh
     git add .
     git commit -m "Initial commit"
-    git remote add origin
+    git remote add origin <remote-url>
     git push -u origin main
     ```
 
@@ -180,6 +180,7 @@ The things that you will need:
  
     ```yml
     name: Say Hello
+    
     on:
       workflow_dispatch:
 
@@ -232,7 +233,7 @@ The things that you will need:
 
   ## Step 9: Add the Inputs
 
-  * For our **Code Review**🕵🏼 use case , our GitHub Action requires specific inputs, which are defined within the ```inputs``` object of the action.yml file:
+  * For our **Code Review**🕵🏼 use case , our GitHub Action requires specific inputs, which are defined within the ```inputs``` object of the ```action.yml``` file:
 
     * ```GITHUB_TOKEN```: In order to add comments to a Pull Request, we need to use the
     [GitHub REST API](https://docs.github.com/en/rest?apiVersion=2022-11-28). To authenticate your requests to GitHub, you will need to provide this **authentication** token
@@ -242,39 +243,39 @@ The things that you will need:
     * ```exclude```: Glob patterns to exclude files from the diff analysis
     * ```custom_prompts```: ```LLM``` Prompt for **Code Review** action
 
-  ```yml
-  name: "Open-AI Code Review Action"
-  description: "Perform code reviews and comment on diffs using OpenAI API."
-  inputs:
-    GITHUB_TOKEN:
-      description: "GitHub token to interact with the repository."
-      required: true
-    OPENAI_API_KEY:
-      description: "OpenAI API key for GPT."
-      required: true
-    OPENAI_API_MODEL:
-      description: "OpenAI API model."
-      required: false
-      default: "gpt-4"
-    max_tokens:
-      description: "Maximum number of tokens that can be generated per analysis."
-      required: false
-      default: "700"
-    exclude:
-      description: "Glob patterns to exclude files from the diff analysis"
-      required: false
-      default: ""
-    custom_prompts:
-      description: "Custom commands to augment the agent's prompts with. Each line is an individual command."
-      required: false
-      default: ""
-  runs:
-    using: "node20"
-    main: "dist/index.js"
-  branding:
-    icon: "aperture"
-    color: "green"
-  ```
+    ```yml
+    name: "Open-AI Code Review Action"
+    description: "Perform code reviews and comment on diffs using OpenAI API."
+    inputs:
+      GITHUB_TOKEN:
+        description: "GitHub token to interact with the repository."
+        required: true
+      OPENAI_API_KEY:
+        description: "OpenAI API key for GPT."
+        required: true
+      OPENAI_API_MODEL:
+        description: "OpenAI API model."
+        required: false
+        default: "gpt-4"
+      max_tokens:
+        description: "Maximum number of tokens that can be generated per analysis."
+        required: false
+        default: "700"
+      exclude:
+        description: "Glob patterns to exclude files from the diff analysis"
+        required: false
+        default: ""
+      custom_prompts:
+        description: "Custom commands to augment the agent's prompts with. Each line is an individual command."
+        required: false
+        default: ""
+    runs:
+      using: "node20"
+      main: "dist/index.js"
+    branding:
+      icon: "aperture"
+      color: "green"
+    ```
 
 </div>
 <div class="step">
@@ -683,6 +684,25 @@ The things that you will need:
 
   * We can now create a new file called index.test.ts in the ```src/__tests__``` folder. This is where we’ll write our tests.
 
+</div>
+<div class="step">
+
+  ## Step 15: Running the tests
+
+  * Now it’s finally time to get rid of that "test": "echo \"Error: no test specified\" && exit 1" script in package.json. Just replace it with:
+    ```js
+    "test": "jest"
+    ```
+  * This will run jest with the configuration we just created. If you want to run the tests in watch mode, you can use ```jest --watch```.
+  * We can now run ```npm test``` to run the tests. You should see something like this.
+  Our action works as intended and we have some tests to prove it!
+    ![jest-run](/images/uploads/jest-run.png)
+    
+</div>
+<div class="step">
+
+  ## Step 16: Publishing the action
+    
 </div>
 
 {{% /stepper %}}
