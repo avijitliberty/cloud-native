@@ -45,13 +45,13 @@ categories:
 
 ### Overview
 
-Imagine🤔 this: It's Friday afternoon, and you've just finished coding a complex piece of functionality. However, your teammates have already signed off for the weekend, leaving your code unreviewed until next week.  What if there was a programmer buddy who could take a look, every time you pushed code into GitHub, scans your code, highlights potential issues, suggests improvements, and even points out best practices. It's like having a second set of eyes👀 – but those eyes never get tired or miss a detail.
+Imagine🤔 this: It's Friday🍻, and you've just finished coding a complex piece of functionality. However, your teammates have already signed off for the weekend, leaving your code unreviewed until next week.  What if there was a programmer buddy who could take a look, every time you pushed code into GitHub, scans your code, highlights potential issues, suggests improvements, and even points out best practices. It's like having a second set of eyes👀 – but those eyes never get tired or miss a detail.
 
 What if you could elevate your code review process, making it ```faster```, ```smarter```, and more ```consistent``` without sacrificing ```quality```? Meet the game-changing duo: OpenAI-powered code reviews via GitHub Actions. 
 
-We’ll take an **MVP** approach (```Minimum Viable Product```) of our GitHub Action with only the required parts to understand the basics, then we’ll add more functionality to it.
+We’ll take an **MVP** approach (```Minimum Viable Product```) for our ```GitHub Action``` with only the required parts to understand the basics, then we’ll add more functionality to it.
 
-Ready to revolutionize your workflow? Let’s dive🐬 in!
+Let’s dive🐬 in!
 
 ### Prerequisites
 
@@ -175,7 +175,7 @@ The things that you will need:
     ```
  
   * In our case, the action will checkout the current repository and then run the action we just created. We put ```./``` as the action path because we want to run the action from the current repository, but we could also use a different repository.
-  * How does GitHub know what action to run? It’s defined in the action.yml file we created earlier.
+  * How does GitHub know what action to run? It’s defined in the ```action.yml``` file we created earlier.
   * One more line worth pointing🫵 is ```on: workflow_dispatch``` which tells GitHub to run the workflow when we manually trigger it from the Actions tab. 
  
     ```yml
@@ -684,6 +684,10 @@ The things that you will need:
 
   * We can now create a new file called index.test.ts in the ```src/__tests__``` folder. This is where we’ll write our tests.
 
+  {{% callout soon %}}
+  Coming soon...
+  {{% /callout %}}
+
 </div>
 <div class="step">
 
@@ -702,6 +706,31 @@ The things that you will need:
 <div class="step">
 
   ## Step 16: Publishing the action
+
+  * If you remember we mentioned the **branding** section in the ```action.yml``` file. Let’s see what it’s all about.
+    ```yml
+    branding:
+      icon: 'activity'
+      color: 'green'
+    ```
+  * This will add a nice icon and a color to your action in the GitHub **Marketplace**. You can find the list of available icons [here](https://docs.github.com/en/actions/sharing-automations/creating-actions/metadata-syntax-for-github-actions#branding).
+
+  * How do we publish our action? Just look at your GitHub repo. If you’ve properly set up an ```action.yml``` file, you should see a banner at the top of the page like this one:
+    
+</div>
+<div class="step">
+
+  ## Step 17: Using your action
+    
+</div>
+<div class="step">
+
+  ## Step 18: DX - Build Automation
+    
+</div>
+<div class="step">
+
+  ## Step 19: Formatting & Linting
     
 </div>
 
