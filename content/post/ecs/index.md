@@ -224,6 +224,8 @@ The things that you will need:
 
   * We will need a code repository for storing the ```Todo Management``` Monolith Application source code. You can use any ```CodePipeline``` source action supported [source control](https://docs.aws.amazon.com/codepipeline/latest/userguide/integrations-action-type.html#integrations-source) system. For this post, we will use ```GitHub```.
 
+  Here's my [GitHub](https://github.com/cloud-borne/todomgmt.git) repo.
+
 </div>
 <div class="step">
 
