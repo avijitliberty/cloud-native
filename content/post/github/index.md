@@ -115,7 +115,8 @@ Let's dive in!🐬
     ```
   * Add your SSH private key to the ```ssh-agent```.
     ```bash
-    ssh-add ~/.ssh/github-username
+    ssh-add ~/.ssh/github-personal
+    ssh-add ~/.ssh/github-work
     ```
 
 </div>
