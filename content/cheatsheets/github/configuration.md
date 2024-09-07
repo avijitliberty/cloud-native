@@ -1,6 +1,6 @@
 ---
 title: Configuration
-linktitle: Configuration
+linktitle: 🛠️ Configuration
 type: book
 date: "2019-05-05T00:00:00+01:00"
 toc: true
@@ -20,54 +20,46 @@ Git Configuration
 You can connect to GitHub using the Secure Shell Protocol (SSH), which provides a secure channel over an unsecured network.
 
 1. Checking for existing SSH keys
-    ```
+    ```bash
     # Lists the files in your .ssh directory, if they exist
     ls -al ~/.ssh
     ```
 
 2. Generating a new SSH key
-    ```
+    ```bash
     ## -C stands for comment to help identify your ssh key
     ## -f stands for the file name where your ssh key get saved
     ssh-keygen -t ed25519 -C "your_email@example.com" -f "github-username"
     ```
-    When you're prompted to "Enter a file in which to save the key," press Enter. This accepts the default file location.
+    When you're prompted to *Enter a file in which to save the key*, press ```Enter```. This accepts the default file location.
 
-{{% callout note %}}
-
-Note: If you are using a legacy system that doesn't support the ed25519 algorithm, use:
-```
-$ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
-```
-{{% /callout %}}
-
-    ```
+    ```bash
     > Enter a file in which to save the key (/c/Users/you/.ssh/id_algorithm):[Press enter]
     At the prompt, type a secure passphrase. For more information, see "Working with SSH key passphrases."
     > Enter passphrase (empty for no passphrase): [Type a passphrase]
     > Enter same passphrase again: [Type passphrase again]
     ```
 
-3. Adding SSH key to the ```ssh-agent```
+3. Ensure the ```ssh-agent``` is running. Start it manually:
+  
+    ```bash
+    # start the ssh-agent in the background
+    eval "$(ssh-agent -s)"
+    ```
 
-    Ensure the ssh-agent is running. Start it manually:
-      ```
-      # start the ssh-agent in the background
-      eval "$(ssh-agent -s)"
-      ```
+4. Add your SSH private key to the ````ssh-agent````. If you created your key with a different name, or if you are adding an existing key that has a different name, replace ```github-username``` in the command with the name of your private key file.
 
-    Add your SSH private key to the ssh-agent. If you created your key with a different name, or if you are adding an existing key that has a different name, replace id_ed25519 in the command with the name of your private key file.
+    ```bash
+    ssh-add ~/.ssh/github-username
+    ```
 
-      ```
-      ssh-add ~/.ssh/id_ed25519
-      ```
-
-4. Add the SSH key to your account on GitHub.
+5. Add the SSH key to your account on ```GitHub```.
 
     * Copy the SSH public key to your clipboard.
-      ```
+      
+      ```bash
       # Copies the contents of the id_ed25519.pub file to your clipboard
-      clip < ~/.ssh/id_ed25519.pub
+      clip < ~/.ssh/github-username.pub
       ```
 
     * In the upper-right corner of any page, click your profile photo, then click ```Settings```
@@ -106,11 +98,49 @@ $ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 
 ## Developer Configuration
 
-* If you would not like to provide credentials for every "repo" operations you could cache them. The Git credential cache runs a daemon process which caches your credentials in memory and hands them out on demand.
+* In ```Git```, there are **three** main levels of configuration that allow you to control settings at different scopes. These configurations are:
 
-  ```bash
-  git config --global credential.helper manager
-  ```
+  1. **System-level** Configuration (```--system```)
+    - **Scope**: Affects all users on the machine and all repositories.
+    - **Location**: The configuration file is stored in the Git system directory, typically located in:
+      - Linux/macOS: /etc/gitconfig
+      - Windows: C:\Program Files\Git\etc\gitconfig
+    - **Usage**: This is useful for system-wide settings, but it requires **administrative** access to modify.
+        ```bash
+        git config --system user.name "System Admin"
+        ```
+  2. **Global-level** Configuration (```--global```)
+    - **Scope**: Affects the current user across all repositories.
+    - **Location**: Stored in the user's home directory:
+      - Linux/macOS: ```~/.gitconfig``` or ```~/.config/git/config```
+      - Windows: ```C:\Users\<username>\.gitconfig```
+    - **Usage**: This is the most common level for personal settings, like name, email, editor, etc.
+        ```bash
+        git config --global user.name "Your Name"
+        ```
+  3. **Local-level** Configuration (```default```)
+    - **Scope**: Affects only the specific repository in which the configuration is set.
+    - **Location**: Stored in the ```.git/config``` file inside the repository directory.
+    - **Usage**: Used for repository-specific configurations, such as different credentials, branch settings, or specific hooks.
+        ```bash
+        git config user.name "Repository-Specific Name"
+        ```
+* ```Git``` provides several options for configuring credentials for every "repo" operations, each with different ways to handle  **caching** or **storage**. 
+
+  * The Git credential ```cache``` runs a daemon process which caches your credentials in memory for a short period (default: 15 minutes) and hands them out on demand.
+    ```bash
+    git config --global credential.helper 'cache --timeout=3600'
+    ```
+
+  * The Git Credential Manager (```GCM```) is a cross-platform, secure way to handle credentials for Git repositories. It integrates with the native credential storage systems on different platforms:
+
+    * On Windows, it uses the Windows Credential Manager.
+    * On macOS, it integrates with the macOS Keychain.
+    * On Linux, it uses the Gnome Keyring or a similar system.
+
+    ```bash
+    git config --global credential.helper manager
+    ```
 
 * Configure the author name and email address to be used with your commits:
 
