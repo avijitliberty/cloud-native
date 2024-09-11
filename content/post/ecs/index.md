@@ -75,7 +75,7 @@ The things that you will need:
 - Install IDE: Install [VSCode](https://code.visualstudio.com/Download) or your :heart: IDE
 
 {{% callout note %}}
-  [Jhipster](https://start.jhipster.tech/) has a active community and they keep the platform updated with latest versions of ```SpringBoot```, ```Java```, ```Node```... So if you are following along please verify compatibility and install JDK and Node versions accordingly.
+  [Jhipster](https://start.jhipster.tech/) has an active community and they keep the platform updated with latest versions of ```SpringBoot```, ```Java```, ```Node```... So if you are following along please verify compatibility and install JDK and Node versions accordingly.
 {{% /callout %}}
 
 
@@ -236,9 +236,9 @@ The things that you will need:
   * On the Repositories page, choose *Create repository*.
   * For *Visibility* settings, choose ```Private```.
   * For *Repository* name, enter a unique name for your repository ```devops/todomgmtdemo```
-  * For *Tag immutability*, keep it ```Disabled```. Repositories configured with immutable tags will prevent image tags from being overwritten. 
+  * For *Tag immutability*, keep it ```Mutable```. Repositories configured with immutable tags will prevent image tags from being overwritten. 
   * For *Scan on push*, keep it ```Disabled```. Repositories configured to scan on push will start an image scan whenever an image is pushed, otherwise image scans need to be started manually. 
-  * For *Encryption* settings, keep it ```Disabled```. You can use AWS Key Management Service (```KMS```) to encrypt images stored in this repository, instead of using the default encryption settings.
+  * For *Encryption* settings, keep the default ```AES-256```. You can also use AWS Key Management Service (```KMS```) to encrypt images stored in this repository, instead of using the default encryption settings.
   * Choose *Create repository*.
   * Please save value of the ```Repository URL``` to use in the later section.
 
@@ -256,12 +256,13 @@ The things that you will need:
     - In *Templates*, choose ```Dev/Test``` template.
     - In the *DB cluster* identifier field, give Aurora DB cluster name, ```todomgmtdb-cluster```
     - To enter your master password, do the following in *Credential Settings*:
-    - Clear *Auto generate a password* check box.
-    - Enter *Master password* value of your choice and enter the same password in *Confirm password*.
+      - Pick *Self Managed* and clear *Auto generate a password* check box.
+      - Enter *Master password* value of your choice and enter the same password in *Confirm password*.
+    - For *Cluster storage configuration* pick ```Aurora Standard```
     - For *Instance configuration*, choose ```db.t4g.medium``` under *Burstable classes* (includes t classes)
     - For *Availability & Durability*, choose ```Create an Aurora Replica/Reader``` node in a different AZ (recommended for scaled availability)
     - Keep defaults for *Connectivity*, *Babelfish* settings, *Database authentication*, *Monitoring* sections.
-    - For *Additional Configuration*, enter ```todomgmt``` under *Initial Database Name*.
+    - For *Additional Configuration*, enter ```todomgmtdb``` under *Initial Database Name*.
     - Choose *Create database*.
     - For Databases, choose the name of the new Aurora DB cluster.
     - On the *Connectivity & Security* tab, note the port and the endpoint of the writer DB instance. Please save value of the ```endpoint``` and ```port``` of the cluster. Endpoint URL should be of format ```todomgmtdb-cluster.cluster-UNIQUEID.AWSREGION.rds.amazonaws.com```
@@ -273,18 +274,21 @@ The things that you will need:
   ## Step 7: Create Application Load Balancer
 
   * In this section, we will create an Amazon EC2 ```Application Load Balancer```. This will be the **public** endpoint to access ```Todo Management``` Monolith Application.
-  * The load balancer must use a ```VPC``` with two **public** subnets in different ```Availability Zones```. In these steps, you confirm your default VPC, create a load balancer, and then create two target groups for our load balancer.
-  * We must create **two** target groups for our load balancer, in order for your deployment to run. You only need to save ```ARN``` value of your first target group. This ARN is used in the *create-service* JSON file in the next section.
+  * The load balancer must use a ```VPC``` with two **public** subnets in different ```Availability Zones```. In these steps, we create a load balancer, and then create two target groups for our load balancer.
   * First create *Target Groups* for the ```Load Balancer```
     - Sign in to the AWS Management Console and open the Amazon *EC2 console* 
     - In the navigation pane, choose *Target Groups* and select *Create Target Group*.
-    - Under *Basic configuration*, select *IP addresses* target type.
+    - Under *Basic configuration*, select ```IP addresses``` target type.
     - In *Name*, enter a target group name ```alb-tg-todomgmtdemo-1```
     - In *Protocol* choose ```HTTP```. In *Port*, enter ```80```.
     - Keep rest of the settings as defaults.
     - Select Next: *Register Targets*.
     - Select *Create Target Group*.
     - Repeat above steps to create another target group for Protocol ```HTTP``` and Port ```8080```, name it ```alb-tg-tripmgmtdemo-2```
+  
+  {{% callout note %}}
+  We must create **two** target groups for our load balancer, in order for your deployment to run. You only need to save ```ARN``` value of your first target group. This ```ARN``` is used in the ```create-service``` JSON file in the next section.
+  {{% /callout %}}
   
   * To create an Amazon EC2 ```Application Load Balancer```
 
