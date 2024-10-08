@@ -195,79 +195,78 @@ The ```ecsInstanceRole``` is an AWS ```IAM role``` that provides the necessary p
 - **Send Container Logs**: Permissions to send logs to Amazon ```CloudWatch```.
 - **Retrieve Secrets and Parameters**: Permissions to retrieve **secrets** from AWS ```Secrets Manager``` and parameters from AWS Systems Manager Parameter Store.
 - **Access to ECS API**: Permissions to make API calls to the ```ECS service``` to report the status of containers and instances.
+- Example ```IAM Policy``` that might be attached to the ```ecsInstanceRole```:
 
-Example ```IAM Policy``` that might be attached to the ```ecsInstanceRole```:
+  ```json
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "ecs:CreateCluster",
+          "ecs:DeregisterContainerInstance",
+          "ecs:DiscoverPollEndpoint",
+          "ecs:Poll",
+          "ecs:RegisterContainerInstance",
+          "ecs:StartTelemetrySession",
+          "ecs:UpdateContainerInstancesState",
+          "ecs:Submit*"
+        ],
+        "Resource": "*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage"
+        ],
+        "Resource": "*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        "Resource": [
+          "arn:aws:logs:*:*:log-group:/ecs/*"
+        ]
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "ssm:GetParameters",
+          "secretsmanager:GetSecretValue",
+          "kms:Decrypt"
+        ],
+        "Resource": "*"
+      }
+    ]
+  }
+  ```
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ecs:CreateCluster",
-        "ecs:DeregisterContainerInstance",
-        "ecs:DiscoverPollEndpoint",
-        "ecs:Poll",
-        "ecs:RegisterContainerInstance",
-        "ecs:StartTelemetrySession",
-        "ecs:UpdateContainerInstancesState",
-        "ecs:Submit*"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ecr:GetAuthorizationToken",
-        "ecr:BatchCheckLayerAvailability",
-        "ecr:GetDownloadUrlForLayer",
-        "ecr:BatchGetImage"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ],
-      "Resource": [
-        "arn:aws:logs:*:*:log-group:/ecs/*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ssm:GetParameters",
-        "secretsmanager:GetSecretValue",
-        "kms:Decrypt"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-```
+- Visual Representation of ```ecsInstanceRole```
 
-Visual Representation of ```ecsInstanceRole```
+  ```
+      +-----------------+
+      |   ECS Agent     |
+      +--------^--------+
+                |
+                v
+  +----------------------------+
+  |    ecsInstanceRole (IAM)   |
+  +-------------^--------------+
+                |
+                v
+  +----------------+   +-------------------+   +-------------+
+  |     ECS        |   | Amazon CloudWatch |   | AWS Secrets |
+  |     Service    |   |  (Logs, Metrics)  |   |  Manager    |
+  +----------------+   +-------------------+   +-------------+
 
-```
-     +-----------------+
-     |   ECS Agent     |
-     +--------^--------+
-              |
-              v
-+----------------------------+
-|    ecsInstanceRole (IAM)   |
-+-------------^--------------+
-              |
-              v
-+----------------+   +-------------------+   +-------------+
-|     ECS        |   | Amazon CloudWatch |   | AWS Secrets |
-|     Service    |   |  (Logs, Metrics)  |   |  Manager    |
-+----------------+   +-------------------+   +-------------+
-
-```
+  ```
 
 ###### ecsTaskExecutionRole 🔐
 
@@ -279,60 +278,60 @@ The ```ecsTaskExecutionRole``` is another IAM role, but it is assigned to the ``
 - **Secrets Manager**: Permissions to retrieve secrets for use within containers.
 - **Systems Manager**: Permissions to retrieve parameters from the Systems Manager Parameter Store.
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ecr:GetDownloadUrlForLayer",
-        "ecr:BatchGetImage",
-        "ecr:GetAuthorizationToken"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ],
-      "Resource": [
-        "arn:aws:logs:*:*:log-group:/ecs/*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "secretsmanager:GetSecretValue",
-        "ssm:GetParameters",
-        "kms:Decrypt"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-```
+  ```json
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:GetAuthorizationToken"
+        ],
+        "Resource": "*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        "Resource": [
+          "arn:aws:logs:*:*:log-group:/ecs/*"
+        ]
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "secretsmanager:GetSecretValue",
+          "ssm:GetParameters",
+          "kms:Decrypt"
+        ],
+        "Resource": "*"
+      }
+    ]
+  }
+  ```
 
-Visual Representation of ```ecsTaskExecutionRole```
+- Visual Representation of ```ecsTaskExecutionRole```
 
-```
-         +------------------------------+
-         |         ECS Task              |
-         +---------------^--------------+
-                         |
-                         v
-         +------------------------------+
-         |    ecsTaskExecutionRole (IAM) |
-         +---------------^--------------+
-                         |
-                         v
-+----------------+   +-------------------+   +-------------+
-|  Amazon ECR    |   | Amazon CloudWatch |   | AWS Secrets |
-|   (Images)     |   |  (Logs)           |   |  Manager    |
-+----------------+   +-------------------+   +-------------+
-```
+  ```
+          +------------------------------+
+          |         ECS Task              |
+          +---------------^--------------+
+                          |
+                          v
+          +------------------------------+
+          |    ecsTaskExecutionRole (IAM) |
+          +---------------^--------------+
+                          |
+                          v
+  +----------------+   +-------------------+   +-------------+
+  |  Amazon ECR    |   | Amazon CloudWatch |   | AWS Secrets |
+  |   (Images)     |   |  (Logs)           |   |  Manager    |
+  +----------------+   +-------------------+   +-------------+
+  ```
 
 ## Networking
 
@@ -340,7 +339,11 @@ Amazon ECS supports multiple networking modes for tasks, providing flexibility i
 
 ###### Bridge Mode 🌉
 
-- **Default for EC2**: Containers share the EC2 instance's network namespace but have their own networking stack.
+- **Default for EC2**: If the network mode is ```bridge```, the task utilizes ```Docker```'s built-in virtual network a.k.a ```bridge``` network which runs inside each EC2  instance.
+- There's **one** ```ENI``` for each EC2 instance and ```Security Groups``` are attached at the ```ENI``` level i.e at each EC2 instance in this case.
+- Tasks are attached to this bridge network.
+- No network **isolation** between containers
+
 - **Port Mapping**: 
 
   - **Static**: Explicitly map container ports to host ports. Cannot run more than **one** instance of the task on the same ```host```.
@@ -358,8 +361,9 @@ Amazon ECS supports multiple networking modes for tasks, providing flexibility i
 
 ###### AWSVPC Mode 🔌
 
-- **VPC Integration**: Each task gets its own Elastic Network Interface (ENI) and a unique private IP address within the VPC.
-- **Security and Isolation**: Best for secure, isolated environments.
+- **VPC Integration**: Each task gets its own Elastic Network Interface (```ENI```) and a unique private IP address within the VPC.
+- In addition ```Security Groups``` are attached at the ```ENI``` level i.e. each task gets it's own Security Group. 
+- **Security and Isolation**: Achieves network solation, best for secure, isolated environments.
 
 ![ecs-awsvpc-mode](/images/uploads/ecs-awsvpc-mode.png)
 
